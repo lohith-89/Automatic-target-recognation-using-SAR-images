@@ -16,3 +16,10 @@ __pycache__/
 # OS junk files
 .DS_Store
 Thumbs.db
+
+# Ignore large model files
+model.h5
+model1.h5
+model2.h5
+self_supervised_model_weights.weights.h5
+self_supervised_model_with_multi_scale.weights.h5
