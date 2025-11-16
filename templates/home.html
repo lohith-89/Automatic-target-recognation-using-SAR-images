@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Home - ATR App{% endblock %}
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">Welcome to ATR — Automatic Target Recognition</h1>
+    <p class="lead">Upload SAR images to classify military vehicles using AI.</p>
+    <a href="/predict" class="btn btn-accent btn-lg">Start Predicting</a>
+    <a href="/gallery" class="btn btn-outline-light btn-lg ms-2">Explore Gallery</a>
+</div>
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Upload & Predict</h5>
+            <p>Drag, drop, or select SAR images for instant classification.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Explore Vehicles</h5>
+            <p>View details and images of recognized vehicle types.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Prediction History</h5>
+            <p>Review your recent classifications and downloads.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

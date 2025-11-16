@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Gallery - ATR App{% endblock %}
+{% block content %}
+<h2>Vehicle Gallery</h2>
+<div class="row">
+    {% for label, details in vehicle_details.items() %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ details.image_url }}" class="card-img-top" alt="{{ label }}">
+            <div class="card-body">
+                <h5>{{ label }}</h5>
+                <p>{{ details.description }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
