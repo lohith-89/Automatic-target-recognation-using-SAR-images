@@ -1,11 +1,14 @@
-# Copy this EXACT content to requirements.txt
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-python-multipart==0.0.6
-numpy==1.24.3
+# requirements.txt - WORKING VERSION FOR RENDER
+# Web framework
+flask==2.3.3
+gunicorn==20.1.0
+
+# Image processing (MUST be compatible with Python 3.9)
 opencv-python-headless==4.8.1.78
-Pillow==10.1.0
-Jinja2==3.1.2
-aiofiles==23.2.1
-pydantic==2.5.0
-opencv-python-headless==4.8.1.78 
+Pillow==9.5.0
+numpy==1.24.3
+
+# Remove these if present:
+# fastapi
+# uvicorn
+# python-multipart
