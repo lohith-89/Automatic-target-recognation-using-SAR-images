@@ -1,0 +1,64 @@
+{
+  "report_id": "SAR_20251129_113113",
+  "timestamp": "2025-11-29T11:31:13.311676",
+  "executive_summary": {
+    "overall_threat_level": "MEDIUM",
+    "predicted_class": "BRDM2",
+    "confidence_score": 0.9993510842323303,
+    "key_findings": "Detected BRDM2 (Amphibious armored scout car) with 99.94% confidence - Threat Level: MEDIUM"
+  },
+  "prediction_analysis": {
+    "predicted_class": 2,
+    "predicted_class_name": "BRDM2",
+    "confidence": 0.9993510842323303,
+    "all_predictions": [
+      [
+        1.8417348712773673e-07,
+        0.00047979780356399715,
+        0.9993510842323303,
+        0.0001643097639316693,
+        6.54205791761342e-07,
+        5.832170586472785e-07,
+        9.885075513693664e-08,
+        1.6081505016529718e-09,
+        1.5441772802660125e-06,
+        1.6989433788694441e-06,
+        1.354276779608199e-08
+      ]
+    ],
+    "top_3_predictions": [
+      {
+        "class_name": "BRDM2",
+        "confidence": 0.9993510842323303,
+        "threat_level": "MEDIUM"
+      },
+      {
+        "class_name": "BMP2",
+        "confidence": 0.00047979780356399715,
+        "threat_level": "HIGH"
+      },
+      {
+        "class_name": "BTR60",
+        "confidence": 0.0001643097639316693,
+        "threat_level": "MEDIUM"
+      }
+    ],
+    "timestamp": "2025-11-29T11:31:13.310661"
+  },
+  "threat_assessment": {
+    "threat_level": "MEDIUM",
+    "threat_score": 0.49967554211616516,
+    "confidence": 0.9993510842323303,
+    "predicted_class": 2,
+    "predicted_class_name": "BRDM2",
+    "class_description": "Amphibious armored scout car",
+    "base_threat": "MEDIUM",
+    "timestamp": "2025-11-29T11:31:13.311676"
+  },
+  "recommendations": [
+    "Increase monitoring frequency",
+    "Notify command center",
+    "Prepare verification protocols",
+    "Track movement patterns"
+  ]
+}

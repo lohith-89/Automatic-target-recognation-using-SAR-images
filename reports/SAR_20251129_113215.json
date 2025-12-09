@@ -1,0 +1,31 @@
+{
+  "report_id": "SAR_20251129_113215",
+  "timestamp": "2025-11-29T11:32:15.392518",
+  "executive_summary": {
+    "overall_threat_level": "LOW",
+    "predicted_class": "D7",
+    "confidence_score": 0.85,
+    "key_findings": "Detected D7 (Bulldozer - Construction equipment) with 85.00% confidence - Threat Level: LOW"
+  },
+  "prediction_analysis": {
+    "predicted_class": 5,
+    "predicted_class_name": "D7",
+    "confidence": 0.85,
+    "timestamp": "2025-11-29T11:32:15.391518"
+  },
+  "threat_assessment": {
+    "threat_level": "LOW",
+    "threat_score": 0.17,
+    "confidence": 0.85,
+    "predicted_class": 5,
+    "predicted_class_name": "D7",
+    "class_description": "Bulldozer - Construction equipment",
+    "base_threat": "LOW",
+    "timestamp": "2025-11-29T11:32:15.391518"
+  },
+  "recommendations": [
+    "Continue routine monitoring",
+    "No immediate action required",
+    "Log for intelligence purposes"
+  ]
+}

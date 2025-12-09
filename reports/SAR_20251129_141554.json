@@ -1,0 +1,64 @@
+{
+  "report_id": "SAR_20251129_141554",
+  "timestamp": "2025-11-29T14:15:54.371446",
+  "executive_summary": {
+    "overall_threat_level": "MEDIUM",
+    "predicted_class": "BTR70",
+    "confidence_score": 0.9999997615814209,
+    "key_findings": "Detected BTR70 (Amphibious armored personnel carrier) with 100.00% confidence - Threat Level: MEDIUM"
+  },
+  "prediction_analysis": {
+    "predicted_class": 4,
+    "predicted_class_name": "BTR70",
+    "confidence": 0.9999997615814209,
+    "all_predictions": [
+      [
+        1.4573479684316937e-13,
+        8.335145906812613e-08,
+        1.186225978555555e-10,
+        1.2254383818799397e-07,
+        0.9999997615814209,
+        3.0071603162209505e-18,
+        3.990323245422746e-16,
+        1.7053986324076823e-21,
+        3.3078800115715623e-12,
+        1.4811055485362823e-13,
+        6.966149188435772e-23
+      ]
+    ],
+    "top_3_predictions": [
+      {
+        "class_name": "BTR70",
+        "confidence": 0.9999997615814209,
+        "threat_level": "MEDIUM"
+      },
+      {
+        "class_name": "BTR60",
+        "confidence": 1.2254383818799397e-07,
+        "threat_level": "MEDIUM"
+      },
+      {
+        "class_name": "BMP2",
+        "confidence": 8.335145906812613e-08,
+        "threat_level": "HIGH"
+      }
+    ],
+    "timestamp": "2025-11-29T14:15:54.371446"
+  },
+  "threat_assessment": {
+    "threat_level": "MEDIUM",
+    "threat_score": 0.49999988079071045,
+    "confidence": 0.9999997615814209,
+    "predicted_class": 4,
+    "predicted_class_name": "BTR70",
+    "class_description": "Amphibious armored personnel carrier",
+    "base_threat": "MEDIUM",
+    "timestamp": "2025-11-29T14:15:54.371446"
+  },
+  "recommendations": [
+    "Increase monitoring frequency",
+    "Notify command center",
+    "Prepare verification protocols",
+    "Track movement patterns"
+  ]
+}

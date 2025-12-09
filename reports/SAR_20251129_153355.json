@@ -1,0 +1,69 @@
+{
+  "report_id": "SAR_20251129_153355",
+  "timestamp": "2025-11-29T15:33:55.882399",
+  "executive_summary": {
+    "overall_threat_level": "CRITICAL",
+    "predicted_class": "2S1",
+    "confidence_score": 0.9998249411582947,
+    "key_findings": "Detected 2S1 (Self-propelled howitzer) with 99.98% confidence - Threat Level: CRITICAL"
+  },
+  "prediction_analysis": {
+    "predicted_class": 0,
+    "predicted_class_name": "2S1",
+    "confidence": 0.9998249411582947,
+    "all_predictions": [
+      [
+        0.9998249411582947,
+        9.089265222428367e-05,
+        4.026843271276448e-06,
+        7.940591331134783e-07,
+        1.4523299896040953e-08,
+        1.0080202450524212e-08,
+        6.565785675566316e-12,
+        5.622368189506233e-05,
+        1.2572147767286879e-09,
+        2.311289426870644e-05,
+        4.772108055939306e-12
+      ]
+    ],
+    "top_3_predictions": [
+      {
+        "class_name": "2S1",
+        "confidence": 0.9998249411582947,
+        "threat_level": "HIGH"
+      },
+      {
+        "class_name": "BMP2",
+        "confidence": 9.089265222428367e-05,
+        "threat_level": "HIGH"
+      },
+      {
+        "class_name": "T62",
+        "confidence": 5.622368189506233e-05,
+        "threat_level": "CRITICAL"
+      }
+    ],
+    "timestamp": "2025-11-29T15:33:55.881371"
+  },
+  "threat_assessment": {
+    "threat_level": "CRITICAL",
+    "threat_score": 0.9498336941003799,
+    "confidence": 0.9998249411582947,
+    "predicted_class": 0,
+    "predicted_class_name": "2S1",
+    "class_description": "Self-propelled howitzer",
+    "base_threat": "HIGH",
+    "timestamp": "2025-11-29T15:33:55.881371"
+  },
+  "recommendations": [
+    "Immediate action required",
+    "Deploy response teams",
+    "Highest alert status",
+    "Notify all stakeholders",
+    "Execute emergency protocols",
+    "Prepare defensive measures",
+    "Artillery threat identified",
+    "Monitor for firing positions",
+    "Prepare counter-battery operations"
+  ]
+}

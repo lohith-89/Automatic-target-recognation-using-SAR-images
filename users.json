@@ -1,0 +1,27 @@
+{
+  "admin": {
+    "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+    "email": "admin@system.com",
+    "registered_at": "2025-11-30T18:41:02.229052"
+  },
+  "loki": {
+    "password": "b7158b64a98516b31d0c23609f69265a868c594dda5b3c8da9e13159e209c9b6",
+    "email": "div@gmail.com",
+    "registered_at": "2025-11-30T18:44:17.905269"
+  },
+  "abhi": {
+    "password": "0729563253bc11cb72714d61132adfe7ba2346b581b02546c9ac4a65fc0c02d8",
+    "email": "jan@gmail.com",
+    "registered_at": "2025-12-02T09:41:47.935337"
+  },
+  "Kashi": {
+    "password": "e83d9a9d271907d59c3ccb90eeb8c0eb009c0d813474b377ee4085ff35684a36",
+    "email": "kashi@gmail.com",
+    "registered_at": "2025-12-02T11:58:29.297553"
+  },
+  "amruth": {
+    "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "email": "idk@gmail.com",
+    "registered_at": "2025-12-08T18:03:14.035289"
+  }
+}

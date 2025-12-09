@@ -1,55 +1,774 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Image Classification</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAR ATR System - Advanced Radar Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #9b59b6;
+            --accent: #e74c3c;
+            --text: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --bg-card-hover: #252525;
+            --border: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .nav-logo i {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.8rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Video Background Styles */
+        .video-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        /* Dark Overlay for better text readability */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(to bottom, var(--bg-dark), #0a0a0a);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 2.5rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: var(--bg-card-hover);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text);
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .stats {
+            padding: 5rem 2rem;
+            background: var(--bg-card);
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.1"><polygon fill="white" points="0,1000 1000,0 1000,1000"/></svg>');
+            background-size: cover;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .footer {
+            background: #0a0a0a;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .footer-logo i {
+            color: var(--primary);
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .flash-messages {
+            max-width: 600px;
+            margin: 100px auto 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Video Controls (optional) */
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .video-control-btn {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .video-control-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-menu {
+                gap: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            /* Optimize video for mobile */
+            .video-background {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Animation for feature cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-satellite-dish"></i>
+                <span>SAR ATR System</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#stats" class="nav-link">Performance</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <div class="nav-actions">
+                <a href="{{ url_for('login') }}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary">
+                    <i class="fas fa-user-plus"></i> Register
+                </a>
+            </div>
+        </div>
+    </nav>
 
-<div class="container">
-  <h1 class="jumbotron bg-primary">Image Classfication</h1>
-  <br><br>
-  <form class="form-horizontal" action="/submit" method="post" enctype="multipart/form-data">
-
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="pwd">Upload Your Image :</label>
-      <div class="col-sm-10">          
-        <input type="file" class="form-control" placeholder="Hours Studied"  name="my_image" id="pwd">
-      </div>
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
 
-    <div class="form-group">        
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-success">Submit</button>
-      </div>
-    </div>
-  </form>
+    <!-- Hero Section with Video Background -->
+    <section class="hero">
+        <!-- Video Background -->
+        <video class="video-background" autoplay muted loop playsinline preload="auto">
+            <source src="{{ url_for('static', filename='videos/sar-background.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+        <!-- Dark Overlay -->
+        <div class="video-overlay"></div>
+        
+        <!-- Video Controls (Optional) -->
+        <div class="video-controls">
+            <button class="video-control-btn" id="muteToggle">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+        </div>
 
-	{% if prediction %}
-  <img src="{{img_path}}" height="400px" width="400px">
-	<h2> Your Prediction   : <i> {{prediction}} </i></h2>
+        <div class="hero-content">
+            <h1>SAR ATR System</h1>
+            <p>Advanced Military Vehicle Detection & Threat Assessment using Synthetic Aperture Radar Technology</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('register') }}" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i> Get Started
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </section>
 
-	{% endif %}
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="section-title">
+            <h2>Advanced Capabilities</h2>
+            <p>Powerful features for military-grade SAR image analysis and threat assessment</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-crosshairs"></i>
+                </div>
+                <h3>Precision Detection</h3>
+                <p>AI-powered identification of military vehicles from SAR imagery with 95%+ accuracy across diverse conditions</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Threat Assessment</h3>
+                <p>Real-time threat level analysis and classification with multi-level alert system for critical detections</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3>Comprehensive Analytics</h3>
+                <p>Detailed intelligence reports with historical data analysis and predictive threat modeling</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h3>Alert System</h3>
+                <p>Instant notifications for critical threats with configurable escalation protocols</p>
+            </div>
+            
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>High Performance</h3>
+                <p>Optimized processing pipeline capable of analyzing multiple SAR images simultaneously</p>
+            </div>
+        </div>
+    </section>
 
-</div>
+    <!-- Stats Section -->
+    <section id="stats" class="stats">
+        <div class="section-title">
+            <h2>System Performance</h2>
+            <p>Proven results in military-grade SAR analysis applications</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">95.7%</div>
+                <div class="stat-label">Detection Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">&lt;2s</div>
+                <div class="stat-label">Analysis Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Operational Uptime</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10k+</div>
+                <div class="stat-label">Images Processed</div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-satellite-dish"></i>
+                <span>SAR ATR System</span>
+            </div>
+            <p>Advanced Military Vehicle Detection & Threat Assessment</p>
+            <p style="margin-top: 0.5rem; opacity: 0.8;">Secure • Reliable • Mission-Critical</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">Support</a>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.6;">&copy; 2024 SAR ATR System. All rights reserved.</p>
+        </div>
+    </footer>
 
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
 
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
 
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(18, 18, 18, 0.98)';
+                navbar.style.boxShadow = '0 5px 25px rgba(0, 0, 0, 0.4)';
+            } else {
+                navbar.style.background = 'rgba(18, 18, 18, 0.95)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
+            }
+        });
 
-
-
+        // Video Controls
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.video-background');
+            const muteToggle = document.getElementById('muteToggle');
+            
+            if (video && muteToggle) {
+                // Mute/unmute toggle
+                muteToggle.addEventListener('click', function() {
+                    if (video.muted) {
+                        video.muted = false;
+                        muteToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    } else {
+                        video.muted = true;
+                        muteToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                    }
+                });
+                
+                // Ensure video plays on mobile
+                video.play().catch(function(error) {
+                    console.log('Autoplay prevented:', error);
+                    // Show play button or handle autoplay block
+                });
+                
+                // Handle video loading errors
+                video.addEventListener('error', function() {
+                    console.log('Video failed to load');
+                    // You could add fallback background here
+                    document.querySelector('.hero').style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                });
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-

@@ -1,0 +1,1098 @@
+{% extends "base.html" %}
+
+{% block title %}Battlefield Map - SAR ATR System{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #11111f;
+    --bg-tertiary: #1a1a2e;
+    --bg-surface: #16213e;
+    --text-primary: #e6e6fa;
+    --text-secondary: #a0a0d0;
+    --text-muted: #6b6b9c;
+    --border-color: #2d2d4d;
+    --accent-primary: #4361ee;
+    --accent-secondary: #3a0ca3;
+    --accent-success: #4cc9f0;
+    --accent-warning: #f72585;
+    --accent-danger: #ff0054;
+    --accent-info: #7209b7;
+    --shadow-dark: rgba(0, 0, 0, 0.6);
+    --shadow-light: rgba(100, 100, 255, 0.1);
+    --glow-blue: rgba(67, 97, 238, 0.4);
+    --glow-red: rgba(255, 0, 84, 0.4);
+    --glow-purple: rgba(114, 9, 183, 0.4);
+}
+
+.map-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--bg-primary);
+    min-height: 100vh;
+}
+
+/* Header Styles */
+.map-header {
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    color: var(--text-primary);
+    padding: 40px 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 15px 40px var(--shadow-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.map-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, var(--glow-blue) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--glow-purple) 0%, transparent 50%);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.map-header h1 {
+    margin: 0 0 15px 0;
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: var(--text-primary);
+}
+
+.map-header p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Map Controls */
+.map-controls {
+    background: var(--bg-surface);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.control-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.control-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+/* Map Area */
+.map-area {
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+
+.map-visualization {
+    border-radius: 10px;
+    height: 600px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+    background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%);
+}
+
+/* Grid */
+.map-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 1px;
+    pointer-events: none;
+}
+
+.grid-cell {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.grid-label {
+    position: absolute;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.grid-label.row {
+    left: 5px;
+    color: #4cc9f0;
+}
+
+.grid-label.col {
+    top: 5px;
+    color: #f72585;
+}
+
+/* Threat Markers - SIMPLIFIED */
+.threat-marker {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: white;
+}
+
+.threat-marker.critical {
+    background: #ff0054;
+    border-color: #ff4066;
+}
+
+.threat-marker.high {
+    background: #f72585;
+    border-color: #ff5aa9;
+}
+
+.threat-marker.medium {
+    background: #ff6d00;
+    border-color: #ffa040;
+}
+
+.threat-marker.low {
+    background: #4cc9f0;
+    border-color: #80d4ff;
+}
+
+.threat-marker:hover {
+    transform: scale(1.3);
+    z-index: 20;
+}
+
+/* Legend */
+.map-legend {
+    background: var(--bg-surface);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-color);
+}
+
+.map-legend h3 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.legend-item.critical { border-left-color: #ff0054; }
+.legend-item.high { border-left-color: #f72585; }
+.legend-item.medium { border-left-color: #ff6d00; }
+.legend-item.low { border-left-color: #4cc9f0; }
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.legend-color.critical { background: #ff0054; }
+.legend-color.high { background: #f72585; }
+.legend-color.medium { background: #ff6d00; }
+.legend-color.low { background: #4cc9f0; }
+
+.legend-info h4 {
+    margin: 0 0 4px 0;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.legend-info p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+/* Recent Detections */
+.recent-detections {
+    background: var(--bg-surface);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    height: 100%;
+}
+
+.recent-detections h3 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detections-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.detection-item {
+    padding: 15px;
+    border-left: 4px solid var(--accent-primary);
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detection-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.detection-item.critical { border-left-color: #ff0054; background: rgba(255, 0, 84, 0.1); }
+.detection-item.high { border-left-color: #f72585; background: rgba(247, 37, 133, 0.1); }
+.detection-item.medium { border-left-color: #ff6d00; background: rgba(255, 109, 0, 0.1); }
+.detection-item.low { border-left-color: #4cc9f0; background: rgba(76, 201, 240, 0.1); }
+
+.detection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.detection-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    flex: 1;
+}
+
+.detection-threat {
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    min-width: 70px;
+    text-align: center;
+}
+
+.threat-critical { background: #ff0054; }
+.threat-high { background: #f72585; }
+.threat-medium { background: #ff6d00; }
+.threat-low { background: #4cc9f0; }
+
+.detection-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.detail-value {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+    background: var(--bg-surface);
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+
+.close {
+    color: var(--text-muted);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .map-header h1 {
+        font-size: 2rem;
+    }
+    
+    .map-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .map-visualization {
+        height: 400px;
+    }
+    
+    .legend-items {
+        grid-template-columns: 1fr;
+    }
+    
+    .detection-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: var(--accent-primary);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover {
+    background: var(--accent-secondary);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--accent-primary);
+    border: 2px solid var(--accent-primary);
+}
+
+.btn-outline:hover {
+    background: var(--accent-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Form Controls */
+.form-select, .form-input {
+    padding: 8px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    min-width: 150px;
+}
+
+.form-select:focus, .form-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+    color: var(--accent-primary);
+}
+
+.empty-state p {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+}
+
+.empty-state small {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* View Controls */
+.view-controls {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.view-btn {
+    padding: 8px 15px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.view-btn.active {
+    background: rgba(67, 97, 238, 0.2);
+    color: var(--accent-primary);
+}
+
+.view-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="map-container">
+    <!-- Header -->
+    <div class="map-header">
+        <h1><i class="fas fa-map-marked-alt"></i> Battlefield Map</h1>
+        <p>Interactive visualization of vehicle detections and threat assessment</p>
+    </div>
+
+    <!-- Map Controls -->
+    <div class="map-controls">
+        <div class="control-group">
+            <span class="control-label">View:</span>
+            <div class="view-controls">
+                <button class="view-btn active" data-view="standard">
+                    <i class="fas fa-map"></i> Standard
+                </button>
+                <button class="view-btn" data-view="satellite">
+                    <i class="fas fa-satellite"></i> Satellite
+                </button>
+            </div>
+            
+            <span class="control-label">Threat Filter:</span>
+            <select class="form-select" id="threatFilter">
+                <option value="all">All Threats</option>
+                <option value="critical">Critical Only</option>
+                <option value="high">High & Critical</option>
+                <option value="medium">Medium+</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <button class="btn btn-outline" onclick="refreshMap()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Map Area -->
+    <div class="map-area">
+        <div class="map-visualization" id="mainMap">
+            <div class="map-grid" id="mapGrid">
+                <!-- Grid will be generated by JavaScript -->
+            </div>
+            <div id="threatMarkers">
+                <!-- Threat markers will be added by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 350px; gap: 30px; margin-top: 20px;">
+        <!-- Map Legend -->
+        <div class="map-legend">
+            <h3><i class="fas fa-info-circle"></i> Threat Classification</h3>
+            <div class="legend-items">
+                <div class="legend-item critical">
+                    <div class="legend-color critical"></div>
+                    <div class="legend-info">
+                        <h4>CRITICAL</h4>
+                        <p>T72/T62 Tanks</p>
+                    </div>
+                </div>
+                <div class="legend-item high">
+                    <div class="legend-color high"></div>
+                    <div class="legend-info">
+                        <h4>HIGH</h4>
+                        <p>BMP2/ZSU-23/4</p>
+                    </div>
+                </div>
+                <div class="legend-item medium">
+                    <div class="legend-color medium"></div>
+                    <div class="legend-info">
+                        <h4>MEDIUM</h4>
+                        <p>BRDM2/BTR70</p>
+                    </div>
+                </div>
+                <div class="legend-item low">
+                    <div class="legend-color low"></div>
+                    <div class="legend-info">
+                        <h4>LOW</h4>
+                        <p>Civilian/Logistics</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Detections -->
+        <div class="recent-detections">
+            <h3><i class="fas fa-history"></i> Recent Detections</h3>
+            <div class="detections-list" id="detectionsList">
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <p>Loading detections...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Threat Detail Modal -->
+<div id="threatModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="threatDetailContent">
+            <!-- Threat details will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Global variables
+let threatMarkers = [];
+let currentDetections = [];
+
+// Initialize the map
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMap();
+    loadRecentDetections();
+    generateThreatMarkers();
+    setupViewControls();
+    setupEventListeners();
+});
+
+function initializeMap() {
+    const grid = document.getElementById('mapGrid');
+    grid.innerHTML = '';
+    
+    // Generate grid cells
+    for (let row = 0; row < 10; row++) {
+        for (let col = 0; col < 10; col++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.style.gridColumn = col + 1;
+            cell.style.gridRow = row + 1;
+            grid.appendChild(cell);
+        }
+    }
+    
+    // Add row labels
+    for (let row = 0; row < 10; row++) {
+        const label = document.createElement('div');
+        label.className = 'grid-label row';
+        label.textContent = String.fromCharCode(65 + row);
+        label.style.top = `${(row * 10) + 5}%`;
+        grid.appendChild(label);
+    }
+    
+    // Add column labels
+    for (let col = 0; col < 10; col++) {
+        const label = document.createElement('div');
+        label.className = 'grid-label col';
+        label.textContent = col + 1;
+        label.style.left = `${(col * 10) + 5}%`;
+        grid.appendChild(label);
+    }
+}
+
+function setupEventListeners() {
+    // Threat filter
+    document.getElementById('threatFilter').addEventListener('change', function(e) {
+        filterThreatMarkers(e.target.value);
+    });
+}
+
+function setupViewControls() {
+    const viewButtons = document.querySelectorAll('.view-btn');
+    
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const viewType = this.getAttribute('data-view');
+            
+            // Update active button
+            viewButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Switch view
+            switchMapView(viewType);
+        });
+    });
+}
+
+function switchMapView(viewType) {
+    const map = document.getElementById('mainMap');
+    
+    if (viewType === 'satellite') {
+        map.style.background = 'linear-gradient(135deg, #0c2461 0%, #1e3799 100%)';
+    } else {
+        map.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
+    }
+}
+
+function generateThreatMarkers() {
+    const markersContainer = document.getElementById('threatMarkers');
+    markersContainer.innerHTML = '';
+    threatMarkers = [];
+    
+    // Sample threat data
+    const sampleThreats = [
+        { id: 1, type: 'T72', threat: 'critical', confidence: 0.95, location: { x: 20, y: 30 }, sector: 'B3' },
+        { id: 2, type: 'BMP2', threat: 'high', confidence: 0.87, location: { x: 60, y: 45 }, sector: 'D6' },
+        { id: 3, type: 'BRDM2', threat: 'medium', confidence: 0.78, location: { x: 75, y: 70 }, sector: 'G8' },
+        { id: 4, type: 'SLICY', threat: 'low', confidence: 0.82, location: { x: 40, y: 80 }, sector: 'H4' },
+        { id: 5, type: 'T62', threat: 'critical', confidence: 0.91, location: { x: 85, y: 25 }, sector: 'C9' },
+        { id: 6, type: 'ZSU_23_4', threat: 'high', confidence: 0.88, location: { x: 50, y: 55 }, sector: 'F5' },
+        { id: 7, type: 'BTR70', threat: 'medium', confidence: 0.76, location: { x: 30, y: 65 }, sector: 'G3' }
+    ];
+    
+    sampleThreats.forEach(threat => {
+        const marker = document.createElement('div');
+        marker.className = `threat-marker ${threat.threat}`;
+        marker.style.left = `${threat.location.x}%`;
+        marker.style.top = `${threat.location.y}%`;
+        marker.setAttribute('data-threat-id', threat.id);
+        
+        // Add vehicle abbreviation
+        const abbreviation = getVehicleAbbreviation(threat.type);
+        marker.innerHTML = abbreviation;
+        
+        marker.addEventListener('click', function() {
+            showThreatDetails(threat);
+        });
+        
+        // Add tooltip
+        marker.title = `${threat.type} - ${threat.sector}`;
+        
+        markersContainer.appendChild(marker);
+        threatMarkers.push({ element: marker, data: threat });
+    });
+}
+
+function getVehicleAbbreviation(vehicleType) {
+    const abbreviations = {
+        'T72': 'T72',
+        'T62': 'T62',
+        'BMP2': 'B2',
+        'BRDM2': 'BR',
+        'SLICY': 'CV',
+        'ZSU_23_4': 'ZS',
+        'BTR70': 'B7'
+    };
+    return abbreviations[vehicleType] || 'VH';
+}
+
+function loadRecentDetections() {
+    // Sample detection data
+    const sampleDetections = [
+        {
+            id: 1,
+            vehicle: 'T72 Tank',
+            threat: 'critical',
+            confidence: '95%',
+            location: 'Sector B3',
+            time: '15 minutes ago',
+            description: 'Main battle tank detected'
+        },
+        {
+            id: 2,
+            vehicle: 'BMP2 APC',
+            threat: 'high',
+            confidence: '87%',
+            location: 'Sector D6',
+            time: '32 minutes ago',
+            description: 'Infantry fighting vehicle'
+        },
+        {
+            id: 3,
+            vehicle: 'BRDM2 Scout',
+            threat: 'medium',
+            confidence: '78%',
+            location: 'Sector G8',
+            time: '1 hour ago',
+            description: 'Armored scout car'
+        },
+        {
+            id: 4,
+            vehicle: 'Civilian Truck',
+            threat: 'low',
+            confidence: '82%',
+            location: 'Sector H4',
+            time: '45 minutes ago',
+            description: 'Civilian logistics vehicle'
+        }
+    ];
+    
+    const container = document.getElementById('detectionsList');
+    
+    if (sampleDetections.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <p>No recent detections</p>
+                <small>Analyze images to populate the map</small>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = '';
+    sampleDetections.forEach(detection => {
+        const item = document.createElement('div');
+        item.className = `detection-item ${detection.threat}`;
+        item.setAttribute('data-detection-id', detection.id);
+        
+        item.innerHTML = `
+            <div class="detection-header">
+                <div class="detection-title">${detection.vehicle}</div>
+                <div class="detection-threat threat-${detection.threat}">${detection.threat.toUpperCase()}</div>
+            </div>
+            <p>${detection.description}</p>
+            <div class="detection-details">
+                <div class="detail">
+                    <span class="detail-label">Confidence</span>
+                    <span class="detail-value">${detection.confidence}</span>
+                </div>
+                <div class="detail">
+                    <span class="detail-label">Location</span>
+                    <span class="detail-value">${detection.location}</span>
+                </div>
+                <div class="detail">
+                    <span class="detail-label">Time</span>
+                    <span class="detail-value">${detection.time}</span>
+                </div>
+            </div>
+        `;
+        
+        item.addEventListener('click', function() {
+            highlightThreatMarker(detection.id);
+        });
+        
+        container.appendChild(item);
+    });
+    
+    currentDetections = sampleDetections;
+}
+
+function showThreatDetails(threat) {
+    const modal = document.getElementById('threatModal');
+    const content = document.getElementById('threatDetailContent');
+    
+    const threatDescriptions = {
+        'T72': 'Main Battle Tank - High mobility and firepower',
+        'T62': 'Medium Tank - Significant combat capability',
+        'BMP2': 'Infantry Fighting Vehicle - Armored personnel carrier',
+        'BRDM2': 'Armored Scout Car - Reconnaissance vehicle',
+        'SLICY': 'Civilian Vehicle - Low threat transport',
+        'ZSU_23_4': 'Anti-Aircraft Vehicle - Air defense system',
+        'BTR70': 'Armored Personnel Carrier - Transport vehicle'
+    };
+    
+    const recommendations = {
+        'critical': [
+            'Immediate verification required',
+            'Alert all response teams',
+            'Prepare defensive measures'
+        ],
+        'high': [
+            'Increase surveillance in the area',
+            'Notify command center',
+            'Prepare response protocols'
+        ],
+        'medium': [
+            'Continue routine monitoring',
+            'Log for intelligence purposes',
+            'Prepare verification teams'
+        ],
+        'low': [
+            'Continue standard observation',
+            'No immediate action required',
+            'Log detection for records'
+        ]
+    };
+    
+    content.innerHTML = `
+        <h2 style="color: var(--text-primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <i class="${getVehicleIcon(threat.type)}"></i>
+            ${threat.type} Detection
+        </h2>
+        
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <strong style="color: var(--text-muted);">Threat Level:</strong> 
+                    <span class="detection-threat threat-${threat.threat}" style="margin-left: 10px; font-size: 0.8rem;">${threat.threat.toUpperCase()}</span><br>
+                    <strong style="color: var(--text-muted);">Confidence:</strong> ${(threat.confidence * 100).toFixed(1)}%<br>
+                    <strong style="color: var(--text-muted);">Location:</strong> ${threat.sector}
+                </div>
+                <div>
+                    <strong style="color: var(--text-muted);">Vehicle Type:</strong> ${threat.type}<br>
+                    <strong style="color: var(--text-muted);">Detection Time:</strong> Recent<br>
+                    <strong style="color: var(--text-muted);">Analyst:</strong> {{ username }}
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h3 style="color: var(--text-primary); margin-bottom: 15px; font-size: 1.1rem;">Vehicle Description</h3>
+            <p style="color: var(--text-secondary);">${threatDescriptions[threat.type] || 'Military vehicle detected'}</p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h3 style="color: var(--text-primary); margin-bottom: 15px; font-size: 1.1rem;">Recommended Actions</h3>
+            <ul style="color: var(--text-secondary); line-height: 1.6;">
+                ${recommendations[threat.threat].map(action => `<li>${action}</li>`).join('')}
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 25px;">
+            <button class="btn btn-primary" onclick="closeModal()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+}
+
+function getVehicleIcon(vehicleType) {
+    const icons = {
+        'T72': 'fas fa-tank',
+        'T62': 'fas fa-tank',
+        'BMP2': 'fas fa-shield-alt',
+        'BRDM2': 'fas fa-car',
+        'SLICY': 'fas fa-truck',
+        'ZSU_23_4': 'fas fa-rocket',
+        'BTR70': 'fas fa-bus'
+    };
+    return icons[vehicleType] || 'fas fa-crosshairs';
+}
+
+function highlightThreatMarker(detectionId) {
+    // Reset all markers
+    threatMarkers.forEach(marker => {
+        marker.element.style.transform = 'scale(1)';
+        marker.element.style.zIndex = '10';
+    });
+    
+    // Highlight the selected marker
+    const marker = threatMarkers.find(m => m.data.id === detectionId);
+    if (marker) {
+        marker.element.style.transform = 'scale(1.5)';
+        marker.element.style.zIndex = '20';
+        
+        // Show details
+        showThreatDetails(marker.data);
+    }
+}
+
+function filterThreatMarkers(filterValue) {
+    threatMarkers.forEach(marker => {
+        const threatLevel = marker.data.threat;
+        let shouldShow = true;
+        
+        switch (filterValue) {
+            case 'critical':
+                shouldShow = threatLevel === 'critical';
+                break;
+            case 'high':
+                shouldShow = threatLevel === 'critical' || threatLevel === 'high';
+                break;
+            case 'medium':
+                shouldShow = threatLevel === 'critical' || threatLevel === 'high' || threatLevel === 'medium';
+                break;
+            case 'all':
+            default:
+                shouldShow = true;
+        }
+        
+        marker.element.style.display = shouldShow ? 'flex' : 'none';
+    });
+}
+
+function refreshMap() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    btn.disabled = true;
+    
+    // Simulate data refresh
+    setTimeout(() => {
+        generateThreatMarkers();
+        loadRecentDetections();
+        
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        
+        showNotification('Map data updated successfully!', 'success');
+    }, 1500);
+}
+
+function closeModal() {
+    document.getElementById('threatModal').style.display = 'none';
+}
+
+function showNotification(message, type = 'info') {
+    // Simple notification implementation
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#27ae60' : '#3498db'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+    
+    // Add CSS for animations
+    if (!document.getElementById('notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('threatModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+</script>
+{% endblock %}

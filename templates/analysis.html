@@ -1,0 +1,1848 @@
+
+{% extends "base.html" %}
+
+{% block title %}Image Analysis - SAR ATR System{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --bg-primary: #0f1419;
+    --bg-secondary: #1a1f2e;
+    --bg-tertiary: #252a3a;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-primary: #3b82f6;
+    --accent-success: #10b981;
+    --accent-warning: #f59e0b;
+    --accent-danger: #ef4444;
+    --accent-info: #06b6d4;
+    --border-color: #334155;
+    --shadow-dark: rgba(0, 0, 0, 0.5);
+    --shadow-light: rgba(255, 255, 255, 0.05);
+}
+
+.analysis-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+    color: var(--text-primary);
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px var(--shadow-dark);
+}
+
+.page-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.page-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.system-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.feature-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.feature-badge.active {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.feature-badge.warning {
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.feature-badge.danger {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+/* Alert Notification - Center popup */
+.alert-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--accent-danger);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px var(--shadow-dark);
+    z-index: 1001;
+    animation: slideDown 0.5s ease forwards;
+    max-width: 500px;
+    text-align: center;
+    border: 3px solid rgba(255,255,255,0.2);
+}
+
+.alert-notification.high {
+    background: var(--accent-warning);
+}
+
+.alert-notification.critical {
+    background: var(--accent-danger);
+}
+
+/* Rejection Notification - Updated for SIMPLE validation */
+.rejection-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--accent-danger);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px var(--shadow-dark);
+    z-index: 1001;
+    animation: slideDown 0.5s ease forwards;
+    max-width: 600px;
+    text-align: center;
+    border: 3px solid rgba(255,255,255,0.2);
+}
+
+.rejection-notification.warning {
+    background: var(--accent-warning);
+}
+
+/* Email Notification - Side popup */
+.email-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--accent-success);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px var(--shadow-dark);
+    z-index: 1001;
+    animation: slideInRight 0.5s ease forwards;
+    max-width: 400px;
+    border: 2px solid rgba(255,255,255,0.2);
+    animation: slideInRight 0.5s ease forwards, fadeOut 0.5s ease 4.5s forwards;
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.alert-icon {
+    font-size: 2.5rem;
+    animation: bellRing 0.5s ease 3;
+}
+
+.reject-icon {
+    font-size: 2.5rem;
+    animation: shake 0.5s ease;
+}
+
+.email-icon {
+    font-size: 2rem;
+    animation: emailSent 0.5s ease;
+}
+
+.alert-message h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+}
+
+.alert-message p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+/* Alarm Animations */
+@keyframes slideDown {
+    to { transform: translateX(-50%) translateY(20px); }
+}
+
+@keyframes slideInRight {
+    from { 
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to { 
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from { 
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to { 
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes bellRing {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-15deg); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes emailSent {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Upload Section */
+.upload-section {
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px var(--shadow-dark);
+    border: 1px solid var(--border-color);
+}
+
+.upload-section h2 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* SIMPLE Validation Info - REMOVED CONFIDENCE AND MUST PASS DISPLAY */
+.validation-info {
+    background: rgba(59, 130, 246, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--accent-primary);
+}
+
+.validation-info h4 {
+    color: var(--accent-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.validation-info ul {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+    color: var(--text-secondary);
+}
+
+.validation-info li {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.upload-area {
+    border: 3px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 60px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--bg-tertiary);
+    position: relative;
+}
+
+.upload-area:hover {
+    border-color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+}
+
+.upload-area.dragover {
+    border-color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.2);
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    font-size: 4rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover .upload-icon {
+    color: var(--accent-primary);
+    transform: scale(1.1);
+}
+
+.upload-area h3 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.upload-area p {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.file-requirements {
+    background: rgba(59, 130, 246, 0.1);
+    padding: 10px 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-primary);
+}
+
+.file-requirements small {
+    color: var(--accent-primary);
+}
+
+.warning-note {
+    background: rgba(245, 158, 11, 0.1);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid var(--accent-warning);
+}
+
+.warning-note small {
+    color: var(--accent-warning);
+}
+
+#imagePreviewContainer {
+    text-align: center;
+    margin-top: 25px;
+    display: none;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px var(--shadow-dark);
+    border: 3px solid var(--border-color);
+}
+
+.preview-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-primary), #1d4ed8);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+    background: #475569;
+}
+
+.btn-secondary:hover {
+    background: #374151;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--accent-success), #059669);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--accent-warning), #d97706);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, var(--accent-info), #0891b2);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--accent-danger), #dc2626);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--shadow-dark);
+}
+
+/* Processing Steps */
+.processing-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.step {
+    text-align: center;
+    padding: 20px 15px;
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    border-left: 4px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.step::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: inherit;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.step.active {
+    border-left-color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+}
+
+.step.active::before {
+    background: var(--accent-primary);
+    transform: scaleX(1);
+}
+
+.step.completed {
+    border-left-color: var(--accent-success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.step.completed::before {
+    background: var(--accent-success);
+    transform: scaleX(1);
+}
+
+.step.rejected {
+    border-left-color: var(--accent-danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.step.rejected::before {
+    background: var(--accent-danger);
+    transform: scaleX(1);
+}
+
+.step-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+    color: var(--accent-primary);
+    transform: scale(1.1);
+}
+
+.step.completed .step-icon {
+    color: var(--accent-success);
+}
+
+.step.rejected .step-icon {
+    color: var(--accent-danger);
+}
+
+.step h4 {
+    margin: 0 0 5px 0;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.step p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+/* Loading Indicator */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    display: none;
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.loading h3 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.loading p {
+    color: var(--text-secondary);
+}
+
+.spinner {
+    border: 4px solid var(--bg-tertiary);
+    border-top: 4px solid var(--accent-primary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Results Section */
+.results-section {
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 5px 20px var(--shadow-dark);
+    display: none;
+    border: 1px solid var(--border-color);
+}
+
+.results-section h2 {
+    color: var(--text-primary);
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.prediction-card, .threat-card, .validation-card {
+    background: var(--bg-tertiary);
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 5px solid var(--accent-primary);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.prediction-card:hover, .threat-card:hover, .validation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--shadow-dark);
+}
+
+/* Updated for SIMPLE validation results */
+.validation-card.accepted { 
+    border-left-color: var(--accent-success); 
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+}
+
+.validation-card.rejected { 
+    border-left-color: var(--accent-danger); 
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+}
+
+.validation-card.warning { 
+    border-left-color: var(--accent-warning); 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+}
+
+/* Threat cards */
+.threat-card.critical { 
+    border-left-color: var(--accent-danger); 
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+}
+.threat-card.high { 
+    border-left-color: var(--accent-warning); 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+}
+.threat-card.medium { 
+    border-left-color: var(--accent-warning); 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(217, 119, 6, 0.02));
+}
+.threat-card.low { 
+    border-left-color: var(--accent-success); 
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+}
+
+.result-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.result-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.result-item strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.result-item span {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* SIMPLE Validation Details */
+.validation-details {
+    margin-top: 20px;
+}
+
+.validation-details h4 {
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.validation-check-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+}
+
+.validation-check-item.passed {
+    border-left: 3px solid var(--accent-success);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.validation-check-item.failed {
+    border-left: 3px solid var(--accent-danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.check-name {
+    color: var(--text-primary);
+}
+
+.check-status {
+    font-weight: bold;
+}
+
+.check-status.passed {
+    color: var(--accent-success);
+}
+
+.check-status.failed {
+    color: var(--accent-danger);
+}
+
+/* Rejection Section */
+.rejection-reasons {
+    background: rgba(239, 68, 68, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 3px solid var(--accent-danger);
+}
+
+.rejection-reasons h5 {
+    color: var(--accent-danger);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.reason-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.reason-item:last-child {
+    margin-bottom: 0;
+}
+
+.top-predictions, .recommendations {
+    margin-top: 20px;
+}
+
+.top-predictions h4, .recommendations h4 {
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prediction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--accent-primary);
+}
+
+.prediction-item:last-child {
+    margin-bottom: 0;
+}
+
+.prediction-class {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.prediction-confidence {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Badges */
+.threat-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 0.8rem;
+}
+
+.validation-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 0.8rem;
+}
+
+.validation-accepted { background: linear-gradient(135deg, var(--accent-success), #059669); }
+.validation-rejected { background: linear-gradient(135deg, var(--accent-danger), #dc2626); }
+.validation-warning { background: linear-gradient(135deg, var(--accent-warning), #d97706); }
+
+.threat-low { background: linear-gradient(135deg, var(--accent-success), #059669); }
+.threat-medium { background: linear-gradient(135deg, var(--accent-warning), #d97706); }
+.threat-high { background: linear-gradient(135deg, var(--accent-warning), #ea580c); }
+.threat-critical { background: linear-gradient(135deg, var(--accent-danger), #dc2626); }
+
+.recommendation-item {
+    padding: 10px 15px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--accent-primary);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.recommendation-item:last-child {
+    margin-bottom: 0;
+}
+
+.report-actions {
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1002;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+    background-color: var(--bg-secondary);
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 800px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 40px var(--shadow-dark);
+    color: var(--text-primary);
+}
+
+.close {
+    color: var(--text-secondary);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--text-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .processing-steps {
+        grid-template-columns: 1fr;
+    }
+    
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .preview-actions, .report-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+    }
+    
+    .email-notification {
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+        animation: slideInRightMobile 0.5s ease forwards, fadeOutMobile 0.5s ease 4.5s forwards;
+    }
+    
+    @keyframes slideInRightMobile {
+        from { 
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to { 
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes fadeOutMobile {
+        from { 
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to { 
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+}
+
+/* SIMPLE Validation Statistics */
+.validation-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-item {
+    background: var(--bg-secondary);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-primary);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    margin-top: 15px;
+    overflow: hidden;
+    display: none;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-primary), #1d4ed8);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Debug button */
+.btn-debug {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.btn-debug:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+}
+
+/* Hidden file input */
+#fileInput {
+    display: none;
+}
+
+.upload-area.dragover .upload-icon {
+    color: var(--accent-primary);
+    transform: scale(1.2);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analysis-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-search"></i> SAR Image Analysis</h1>
+        <p>Upload and analyze Synthetic Aperture Radar images</p>
+        
+        <div class="system-features">
+            <div class="feature-badge active">
+                <i class="fas fa-shield-alt"></i>
+                SAR Validation Active
+            </div>
+            <div class="feature-badge active">
+                <i class="fas fa-filter"></i>
+                Non-SAR images filtered
+            </div>
+            {% if model_available %}
+            <div class="feature-badge active">
+                <i class="fas fa-check-circle"></i>
+                Model: Available
+            </div>
+            {% else %}
+            <div class="feature-badge danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                Model: UNAVAILABLE
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+        <h2><i class="fas fa-cloud-upload-alt"></i> Upload SAR Image</h2>
+       
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.tiff,.tif">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3>Click to upload or drag & drop</h3>
+            <p>Supported formats: PNG, JPG, JPEG, TIFF | Max size: 10MB</p>
+            <p>Recommended: 224x224 RGB SAR images for optimal results</p>
+            <div class="file-requirements">
+                <small><i class="fas fa-info-circle"></i> For best results, use clear SAR images with visible vehicle targets</small>
+            </div>
+            
+
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Image Preview -->
+        <div id="imagePreviewContainer">
+            <h4><i class="fas fa-image"></i> Image Preview</h4>
+            <img id="imagePreview" class="image-preview" src="" alt="Image Preview">
+            <div class="preview-actions">
+                <button class="btn btn-primary" onclick="analyzeImage()">
+                    <i class="fas fa-play"></i> Start Analysis
+                </button>
+                <button class="btn btn-secondary" onclick="clearImage()">
+                    <i class="fas fa-times"></i> Clear Image
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Steps -->
+    <div class="processing-steps">
+        <div class="step" id="step1">
+            <div class="step-icon"><i class="fas fa-upload"></i></div>
+            <h4>Step 1</h4>
+            <p>Upload Image</p>
+        </div>
+        <div class="step" id="step2">
+            <div class="step-icon"><i class="fas fa-check-double"></i></div>
+            <h4>Step 2</h4>
+            <p>SAR Validation</p>
+        </div>
+        <div class="step" id="step3">
+            <div class="step-icon"><i class="fas fa-robot"></i></div>
+            <h4>Step 3</h4>
+            <p>Vehicle Detection</p>
+        </div>
+        <div class="step" id="step4">
+            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+            <h4>Step 4</h4>
+            <p>Threat Assessment</p>
+        </div>
+        <div class="step" id="step5">
+            <div class="step-icon"><i class="fas fa-flag-checkered"></i></div>
+            <h4>Step 5</h4>
+            <p>Results</p>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading" id="loadingIndicator">
+        <div class="spinner"></div>
+        <h3>Processing Image...</h3>
+        <p>Analyzing SAR image with validation protocol</p>
+        <div id="modelStatusText">
+            {% if model_available %}
+            <p>✓ Using AI Model: downstream_model_weights.h5</p>
+            <p>✓ SAR Validation: Active</p>
+            <p>✓ Non-SAR images filtered automatically</p>
+            {% else %}
+            <p>⚠️ Using Demo Mode (AI Model Unavailable)</p>
+            {% endif %}
+        </div>
+        <p>This may take a few seconds. Please don't close this page.</p>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="resultsSection">
+        <h2><i class="fas fa-chart-bar"></i> Analysis Results</h2>
+        
+        <div class="result-grid">
+            <!-- Vehicle Detection Results -->
+            <div class="prediction-card" id="predictionCard">
+                <h3><i class="fas fa-robot"></i> Vehicle Detection</h3>
+                <div id="predictionResults">
+                    <div class="result-item">
+                        <strong>Status:</strong>
+                        <span id="predictionStatus">-</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Detected Vehicle:</strong>
+                        <span id="predictedVehicle">-</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Confidence Score:</strong>
+                        <span id="predictionConfidence">-</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Vehicle Type:</strong>
+                        <span id="vehicleDescription">-</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Processing Time:</strong>
+                        <span id="processingTime">-</span>
+                    </div>
+                </div>
+
+                <div class="top-predictions" id="topPredictionsSection">
+                    <h4><i class="fas fa-trophy"></i> Top Predictions:</h4>
+                    <div id="topPredictionsList">
+                        <!-- Top predictions will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threat Assessment -->
+            <div class="threat-card" id="threatCard">
+                <h3><i class="fas fa-shield-alt"></i> Threat Assessment</h3>
+                <div id="threatResults">
+                    <div class="result-item">
+                        <strong>Threat Level:</strong>
+                        <span class="threat-badge threat-low" id="threatLevel">N/A</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Threat Score:</strong>
+                        <span id="threatScore">0.000</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>Assessment Time:</strong>
+                        <span id="assessmentTime">-</span>
+                    </div>
+                </div>
+
+                <div class="recommendations">
+                    <h4><i class="fas fa-list-check"></i> Recommended Actions:</h4>
+                    <div id="recommendationsList">
+                        <!-- Recommendations will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Actions -->
+        <div class="report-actions">
+            <button class="btn btn-success" onclick="viewFullReport()">
+                <i class="fas fa-file-alt"></i> View Full Report
+            </button>
+            <button class="btn btn-primary" onclick="analyzeAnother()">
+                <i class="fas fa-redo"></i> Analyze Another Image
+            </button>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2><i class="fas fa-file-alt"></i> Detailed Analysis Report</h2>
+            <div id="reportContent">
+                <!-- Report content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Global variables
+let currentImageFile = null;
+let isProcessing = false;
+let currentAnalysisResult = null;
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeFileUpload();
+});
+
+// File upload initialization
+function initializeFileUpload() {
+    const fileInput = document.getElementById('fileInput');
+    const uploadArea = document.getElementById('uploadArea');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+    // Click on upload area to trigger file input
+    uploadArea.addEventListener('click', function() {
+        fileInput.click();
+    });
+
+    // Handle file selection
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            handleFileSelection(e.target.files[0]);
+        }
+    });
+
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', function() {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        
+        if (e.dataTransfer.files.length > 0) {
+            handleFileSelection(e.dataTransfer.files[0]);
+        }
+    });
+}
+
+// Handle file selection
+function handleFileSelection(file) {
+    currentImageFile = file;
+    
+    // Validate file type
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/tiff', 'image/tif'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Please select a valid image file (PNG, JPG, JPEG, TIFF)');
+        return;
+    }
+    
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+    }
+    
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('imagePreviewContainer').style.display = 'block';
+        
+        // Reset previous results
+        resetResults();
+        
+        // Update step 1 to completed
+        updateStep(1, 'completed');
+        updateStep(2, 'active');
+        for (let i = 3; i <= 5; i++) {
+            updateStep(i, '');
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// Reset all results
+function resetResults() {
+    document.getElementById('resultsSection').style.display = 'none';
+    currentAnalysisResult = null;
+}
+
+// Update processing steps
+function updateStep(stepNumber, status) {
+    const step = document.getElementById(`step${stepNumber}`);
+    step.classList.remove('active', 'completed', 'rejected');
+    
+    if (status === 'active') {
+        step.classList.add('active');
+    } else if (status === 'completed') {
+        step.classList.add('completed');
+    } else if (status === 'rejected') {
+        step.classList.add('rejected');
+    }
+}
+
+// Main analysis function - BACKEND CALLS UNCHANGED
+async function analyzeImage() {
+    if (!currentImageFile) {
+        alert('Please select an image first');
+        return;
+    }
+    
+    if (isProcessing) {
+        alert('Analysis already in progress');
+        return;
+    }
+    
+    isProcessing = true;
+    
+    try {
+        // Show loading indicator
+        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('resultsSection').style.display = 'none';
+        
+        // Update steps
+        updateStep(2, 'active');
+        
+        // Create form data
+        const formData = new FormData();
+        formData.append('image', currentImageFile);
+        
+        console.log('🔄 Starting analysis...');
+        
+        // Send to backend - UNCHANGED
+        const response = await fetch('/api/analyze-image', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        console.log('📊 Analysis result:', result);
+        
+        if (result.success) {
+            // Store the result for the report
+            currentAnalysisResult = result;
+            
+            // Display results based on validation outcome
+            if (result.threat_assessment?.is_rejected || result.prediction?.predicted_class_name === 'REJECTED - Not a SAR image') {
+                // Image was rejected
+                handleRejectedImage(result);
+            } else {
+                // Image passed validation, show results
+                handleValidImage(result);
+            }
+            
+        } else {
+            throw new Error(result.error || 'Analysis failed');
+        }
+        
+    } catch (error) {
+        console.error('❌ Analysis error:', error);
+        alert('Analysis failed: ' + error.message);
+        
+        // Reset steps on error
+        updateStep(2, 'rejected');
+        updateStep(3, '');
+        updateStep(4, '');
+        updateStep(5, '');
+    } finally {
+        isProcessing = false;
+        document.getElementById('loadingIndicator').style.display = 'none';
+    }
+}
+
+// Handle rejected image
+function handleRejectedImage(result) {
+    // Update steps to show rejection
+    updateStep(2, 'rejected');
+    updateStep(3, 'rejected');
+    updateStep(4, 'rejected');
+    updateStep(5, 'rejected');
+    
+    // Show rejection notification
+    showRejectionNotification(result);
+    
+    // Display vehicle detection as rejected
+    displayPredictionResults(result.prediction, true);
+    
+    // Display threat assessment as rejected
+    displayThreatResults(result.threat_assessment, true);
+    
+    // Show results section
+    document.getElementById('resultsSection').style.display = 'block';
+    
+    // Scroll to results
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Handle valid image
+function handleValidImage(result) {
+    const prediction = result.prediction;
+    const threat = result.threat_assessment;
+    
+    // Update steps
+    updateStep(2, 'completed');
+    updateStep(3, 'completed');
+    updateStep(4, 'completed');
+    updateStep(5, 'completed');
+    
+    // Display results
+    displayPredictionResults(prediction, false);
+    displayThreatResults(threat, false);
+    
+    // Show alarm notification if threat is high/critical
+    if (threat && ['HIGH', 'CRITICAL'].includes(threat.threat_level)) {
+        showAlarmNotification(result);
+        
+        // If CRITICAL, also show email sent notification
+        if (threat.threat_level === 'CRITICAL') {
+            setTimeout(() => {
+                showEmailSentNotification();
+            }, 1500);
+        }
+    }
+    
+    // Show results section
+    document.getElementById('resultsSection').style.display = 'block';
+    
+    // Scroll to results
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Display prediction results
+function displayPredictionResults(prediction, isRejected) {
+    if (isRejected || prediction.predicted_class_name === 'REJECTED - Not a SAR image' || prediction.predicted_class_name === 'REJECTED') {
+        document.getElementById('predictionStatus').textContent = 'REJECTED';
+        document.getElementById('predictedVehicle').textContent = 'Not a SAR image';
+        document.getElementById('predictionConfidence').textContent = '0%';
+        document.getElementById('vehicleDescription').textContent = 'Image filtered by validation';
+        document.getElementById('processingTime').textContent = 'N/A';
+        
+        // Hide top predictions
+        document.getElementById('topPredictionsSection').style.display = 'none';
+        
+    } else if (prediction.predicted_class_name === 'Unknown / Low confidence') {
+        document.getElementById('predictionStatus').textContent = 'LOW CONFIDENCE';
+        document.getElementById('predictedVehicle').textContent = 'Unknown';
+        document.getElementById('predictionConfidence').textContent = (prediction.confidence * 100).toFixed(2) + '%';
+        document.getElementById('vehicleDescription').textContent = 'Model confidence below threshold';
+        document.getElementById('processingTime').textContent = currentAnalysisResult.processing_time || 'N/A';
+        
+        // Hide top predictions
+        document.getElementById('topPredictionsSection').style.display = 'none';
+        
+    } else {
+        const threat = currentAnalysisResult.threat_assessment;
+        
+        document.getElementById('predictionStatus').textContent = 'DETECTED';
+        document.getElementById('predictedVehicle').textContent = prediction.predicted_class_name;
+        document.getElementById('predictionConfidence').textContent = (prediction.confidence * 100).toFixed(2) + '%';
+        document.getElementById('vehicleDescription').textContent = threat?.class_description || 'N/A';
+        document.getElementById('processingTime').textContent = currentAnalysisResult.processing_time || 'N/A';
+        
+        // Show and update top predictions
+        document.getElementById('topPredictionsSection').style.display = 'block';
+        const topPredictionsList = document.getElementById('topPredictionsList');
+        topPredictionsList.innerHTML = '';
+        
+        const topPredictions = prediction.top_predictions || prediction.top_3_predictions || [];
+        topPredictions.forEach(pred => {
+            const predItem = document.createElement('div');
+            predItem.className = 'prediction-item';
+            predItem.innerHTML = `
+                <span class="prediction-class">${pred.class_name}</span>
+                <span class="prediction-confidence">${(pred.confidence * 100).toFixed(2)}%</span>
+            `;
+            topPredictionsList.appendChild(predItem);
+        });
+    }
+}
+
+// Display threat results
+function displayThreatResults(threat, isRejected) {
+    if (isRejected || threat.is_rejected || threat.threat_level === 'REJECTED') {
+        document.getElementById('threatLevel').textContent = 'REJECTED';
+        document.getElementById('threatLevel').className = 'threat-badge threat-low';
+        document.getElementById('threatScore').textContent = '0.000';
+        document.getElementById('assessmentTime').textContent = new Date().toLocaleString();
+        
+        // Update threat card styling
+        const threatCard = document.getElementById('threatCard');
+        threatCard.className = 'threat-card';
+        
+        // Show rejection recommendations
+        const recommendationsList = document.getElementById('recommendationsList');
+        recommendationsList.innerHTML = '';
+        
+        const recommendations = [
+            'Image filtered by SAR validation system',
+            'Upload a valid SAR image for analysis',
+            'Check image quality and format',
+            'Ensure image contains SAR characteristics'
+        ];
+        
+        recommendations.forEach(rec => {
+            const recItem = document.createElement('div');
+            recItem.className = 'recommendation-item';
+            recItem.textContent = rec;
+            recommendationsList.appendChild(recItem);
+        });
+        
+    } else if (threat.threat_level === 'UNKNOWN') {
+        document.getElementById('threatLevel').textContent = 'UNKNOWN';
+        document.getElementById('threatLevel').className = 'threat-badge threat-low';
+        document.getElementById('threatScore').textContent = threat.threat_score ? threat.threat_score.toFixed(3) : '0.100';
+        document.getElementById('assessmentTime').textContent = new Date().toLocaleString();
+        
+        // Update threat card styling
+        const threatCard = document.getElementById('threatCard');
+        threatCard.className = 'threat-card';
+        
+        // Show recommendations for unknown
+        const recommendationsList = document.getElementById('recommendationsList');
+        recommendationsList.innerHTML = '';
+        
+        const recommendations = [
+            'Verify image quality and SAR characteristics',
+            'Manual review recommended',
+            'Consider re-capturing image if possible',
+            'Log for further analysis'
+        ];
+        
+        recommendations.forEach(rec => {
+            const recItem = document.createElement('div');
+            recItem.className = 'recommendation-item';
+            recItem.textContent = rec;
+            recommendationsList.appendChild(recItem);
+        });
+    } else {
+        document.getElementById('threatLevel').textContent = threat.threat_level;
+        document.getElementById('threatScore').textContent = threat.threat_score.toFixed(3);
+        document.getElementById('assessmentTime').textContent = new Date().toLocaleString();
+        
+        // Update threat card styling
+        const threatCard = document.getElementById('threatCard');
+        threatCard.className = 'threat-card ' + threat.threat_level.toLowerCase();
+        
+        // Update threat badge
+        const threatBadge = document.getElementById('threatLevel');
+        threatBadge.className = 'threat-badge threat-' + threat.threat_level.toLowerCase();
+        
+        // Update recommendations
+        const recommendationsList = document.getElementById('recommendationsList');
+        recommendationsList.innerHTML = '';
+        
+        const recommendations = getRecommendations(threat.threat_level);
+        recommendations.forEach(rec => {
+            const recItem = document.createElement('div');
+            recItem.className = 'recommendation-item';
+            recItem.textContent = rec;
+            recommendationsList.appendChild(recItem);
+        });
+    }
+}
+
+// Get recommendations based on threat level
+function getRecommendations(threatLevel) {
+    const recommendations = {
+        'CRITICAL': [
+            'IMMEDIATE ACTION REQUIRED - Deploy response teams',
+            'Notify all command levels and execute emergency protocols',
+            'Establish perimeter and prepare for engagement',
+            'Activate all surveillance and monitoring systems'
+        ],
+        'HIGH': [
+            'Immediate verification and threat assessment required',
+            'Alert response teams and increase readiness level',
+            'Prepare contingency plans and backup support',
+            'Continuous monitoring and situation updates'
+        ],
+        'MEDIUM': [
+            'Increase monitoring frequency and vigilance',
+            'Notify command center for situational awareness',
+            'Prepare verification protocols',
+            'Maintain standard operational procedures'
+        ],
+        'LOW': [
+            'Continue routine monitoring operations',
+            'Log detection for intelligence purposes',
+            'No immediate action required',
+            'Maintain standard surveillance patterns'
+        ],
+        'UNKNOWN': [
+            'Verify image quality and SAR characteristics',
+            'Manual review recommended',
+            'Log for further analysis',
+            'Consider re-capturing image if possible'
+        ]
+    };
+    
+    return recommendations[threatLevel] || ['No specific recommendations available.'];
+}
+
+// Show rejection notification
+function showRejectionNotification(result) {
+    // Remove any existing notifications first
+    const existingNotifications = document.querySelectorAll('.rejection-notification');
+    existingNotifications.forEach(notification => {
+        notification.remove();
+    });
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'rejection-notification';
+    notification.innerHTML = `
+        <div class="alert-content">
+            <div class="reject-icon">
+                <i class="fas fa-ban"></i>
+            </div>
+            <div class="alert-message">
+                <h4>IMAGE FILTERED</h4>
+                <p>Not a valid SAR image - filtered by validation system</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 10000);
+}
+
+// Show alarm notification with sound
+function showAlarmNotification(result) {
+    // Remove any existing threat notifications first
+    const existingNotifications = document.querySelectorAll('.alert-notification:not(.email-notification)');
+    existingNotifications.forEach(notification => {
+        notification.remove();
+    });
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `alert-notification ${result.threat_assessment.threat_level.toLowerCase()}`;
+    notification.innerHTML = `
+        <div class="alert-content">
+            <div class="alert-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="alert-message">
+                <h4>${result.threat_assessment.threat_level} THREAT DETECTED</h4>
+                <p>${result.prediction.predicted_class_name} - ${(result.prediction.confidence * 100).toFixed(2)}% confidence</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 10000);
+}
+
+// Show email sent notification
+function showEmailSentNotification() {
+    // Remove any existing email notifications first
+    const existingNotifications = document.querySelectorAll('.email-notification');
+    existingNotifications.forEach(notification => {
+        notification.remove();
+    });
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'email-notification';
+    notification.innerHTML = `
+        <div class="alert-content">
+            <div class="email-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="alert-message">
+                <h4>AUTOMATIC EMAIL SENT</h4>
+                <p>Critical threat report emailed to command center</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// View full report
+function viewFullReport() {
+    if (!currentAnalysisResult) {
+        alert('No analysis results available. Please analyze an image first.');
+        return;
+    }
+    
+    const modal = document.getElementById('reportModal');
+    const content = document.getElementById('reportContent');
+    
+    const prediction = currentAnalysisResult.prediction;
+    const threat = currentAnalysisResult.threat_assessment;
+    
+    // Generate a unique report ID
+    const reportId = 'RPT-' + Date.now().toString().slice(-8);
+    
+    content.innerHTML = `
+        <div style="margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: var(--accent-primary);">SAR ANALYSIS REPORT</h3>
+                <span style="background: var(--accent-primary); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem;">
+                    ${reportId}
+                </span>
+            </div>
+            
+            <div style="background: var(--bg-tertiary); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border-color);">
+                <h4 style="color: var(--text-primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-file-alt"></i> Executive Summary
+                </h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Detection Status:</strong> 
+                            <span style="color: ${prediction?.predicted_class_name?.includes('REJECTED') ? 'var(--accent-danger)' : 'var(--accent-success)'}; font-weight: bold;">
+                                ${prediction?.predicted_class_name?.includes('REJECTED') ? 'FILTERED' : 'DETECTED'}
+                            </span>
+                        </p>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Detected Vehicle:</strong> ${prediction?.predicted_class_name || 'N/A'}
+                        </p>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Confidence Score:</strong> ${prediction?.confidence ? (prediction.confidence * 100).toFixed(2) + '%' : 'N/A'}
+                        </p>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Processing Time:</strong> ${currentAnalysisResult.processing_time || 'N/A'}
+                        </p>
+                    </div>
+                    <div>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Threat Level:</strong> 
+                            <span class="threat-badge threat-${threat?.threat_level?.toLowerCase() || 'low'}" style="margin-left: 10px;">
+                                ${threat?.threat_level || 'N/A'}
+                            </span>
+                        </p>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Threat Score:</strong> ${threat?.threat_score?.toFixed(3) || 'N/A'}
+                        </p>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">Generated:</strong> ${new Date().toLocaleString()}
+                        </p>
+                        <p style="margin: 5px 0; color: var(--text-secondary);">
+                            <strong style="color: var(--text-primary);">System:</strong> SAR ATR with Validation
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            ${prediction?.top_3_predictions?.length > 0 && !prediction.predicted_class_name.includes('REJECTED') ? `
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-trophy"></i> Top Predictions
+                </h4>
+                <div style="background: var(--bg-tertiary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    ${prediction.top_3_predictions.map(pred => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-primary);">${pred.class_name}</span>
+                            <span style="color: var(--accent-primary); font-weight: bold;">${(pred.confidence * 100).toFixed(2)}%</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            ` : ''}
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-list-check"></i> Recommended Actions
+                </h4>
+                <div style="background: var(--bg-tertiary); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    ${getRecommendations(threat?.threat_level).map(rec => `
+                        <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px;">
+                            <i class="fas fa-chevron-right" style="color: var(--accent-primary); margin-top: 3px;"></i>
+                            <span style="color: var(--text-secondary);">${rec}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <div style="background: var(--bg-tertiary); padding: 15px; border-radius: 8px; margin-top: 25px; border: 1px solid var(--border-color);">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0; text-align: center;">
+                    <i class="fas fa-shield-alt"></i> Report generated by SAR ATR System | Confidential
+                </p>
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px;">
+            <button class="btn btn-success" onclick="downloadReport()">
+                <i class="fas fa-download"></i> Download Report
+            </button>
+            <button class="btn btn-primary" onclick="printReport()">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('reportModal').style.display = 'none';
+}
+
+function clearImage() {
+    currentImageFile = null;
+    currentAnalysisResult = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('imagePreviewContainer').style.display = 'none';
+    document.getElementById('resultsSection').style.display = 'none';
+    document.getElementById('loadingIndicator').style.display = 'none';
+    
+    // Reset steps
+    for (let i = 1; i <= 5; i++) {
+        document.getElementById(`step${i}`).classList.remove('active', 'completed', 'rejected');
+    }
+    
+    // Reset cards to default display
+    document.getElementById('topPredictionsSection').style.display = 'block';
+    
+    isProcessing = false;
+}
+
+function analyzeAnother() {
+    clearImage();
+    document.getElementById('uploadArea').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('reportModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+</script>
+{% endblock %}

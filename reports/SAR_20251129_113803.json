@@ -1,0 +1,69 @@
+{
+  "report_id": "SAR_20251129_113803",
+  "timestamp": "2025-11-29T11:38:03.549363",
+  "executive_summary": {
+    "overall_threat_level": "CRITICAL",
+    "predicted_class": "T62",
+    "confidence_score": 0.9999983310699463,
+    "key_findings": "Detected T62 (Main battle tank) with 100.00% confidence - Threat Level: CRITICAL"
+  },
+  "prediction_analysis": {
+    "predicted_class": 7,
+    "predicted_class_name": "T62",
+    "confidence": 0.9999983310699463,
+    "all_predictions": [
+      [
+        6.175740168146149e-07,
+        3.562312889116015e-09,
+        3.01052438089755e-07,
+        3.795249878257856e-11,
+        5.177072996914809e-15,
+        2.380695085513196e-10,
+        1.5361358603392075e-15,
+        0.9999983310699463,
+        1.173710989510468e-10,
+        1.966958373955663e-09,
+        7.85056499807979e-07
+      ]
+    ],
+    "top_3_predictions": [
+      {
+        "class_name": "T62",
+        "confidence": 0.9999983310699463,
+        "threat_level": "CRITICAL"
+      },
+      {
+        "class_name": "ZSU_23_4",
+        "confidence": 7.85056499807979e-07,
+        "threat_level": "HIGH"
+      },
+      {
+        "class_name": "2S1",
+        "confidence": 6.175740168146149e-07,
+        "threat_level": "HIGH"
+      }
+    ],
+    "timestamp": "2025-11-29T11:38:03.547850"
+  },
+  "threat_assessment": {
+    "threat_level": "CRITICAL",
+    "threat_score": 0.949998414516449,
+    "confidence": 0.9999983310699463,
+    "predicted_class": 7,
+    "predicted_class_name": "T62",
+    "class_description": "Main battle tank",
+    "base_threat": "CRITICAL",
+    "timestamp": "2025-11-29T11:38:03.547850"
+  },
+  "recommendations": [
+    "Immediate action required",
+    "Deploy response teams",
+    "Highest alert status",
+    "Notify all stakeholders",
+    "Execute emergency protocols",
+    "Prepare defensive measures",
+    "Tank threat identified",
+    "Coordinate anti-tank resources",
+    "Monitor for supporting units"
+  ]
+}

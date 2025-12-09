@@ -1,0 +1,1615 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - SAR ATR System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .reports-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .reports-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid #475569;
+    }
+
+    .reports-header h1 {
+        margin: 0;
+        font-size: 2.2rem;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 15px;
+    }
+
+    /* Quick Stats */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background: #1e293b;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+        border-top: 4px solid #3b82f6;
+        transition: transform 0.3s ease;
+        border: 1px solid #334155;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    }
+
+    .stat-card.critical { border-top-color: #ef4444; }
+    .stat-card.high { border-top-color: #f59e0b; }
+    .stat-card.medium { border-top-color: #f59e0b; }
+    .stat-card.low { border-top-color: #10b981; }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #e2e8f0;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    /* Filters */
+    .filters {
+        background: #1e293b;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        border: 1px solid #334155;
+    }
+
+    .filters h3 {
+        color: #e2e8f0;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #cbd5e1;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .form-select, .form-input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid #475569;
+        border-radius: 8px;
+        font-size: 14px;
+        background: #0f172a;
+        color: #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .form-select:focus, .form-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background: #1e293b;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .reports-grid {
+        display: grid;
+        gap: 20px;
+    }
+
+    .report-card {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        border-left: 5px solid #3b82f6;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease;
+        border: 1px solid #334155;
+    }
+
+    .report-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: inherit;
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    }
+
+    .report-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .report-card.critical { 
+        border-left-color: #ef4444; 
+    }
+    .report-card.critical::before { background: #ef4444; }
+
+    .report-card.high { 
+        border-left-color: #f59e0b; 
+    }
+    .report-card.high::before { background: #f59e0b; }
+
+    .report-card.medium { 
+        border-left-color: #f59e0b; 
+    }
+    .report-card.medium::before { background: #f59e0b; }
+
+    .report-card.low { 
+        border-left-color: #10b981; 
+    }
+    .report-card.low::before { background: #10b981; }
+
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .report-id {
+        font-weight: bold;
+        color: #e2e8f0;
+        font-size: 1.1rem;
+    }
+
+    .report-threat {
+        padding: 6px 15px;
+        border-radius: 20px;
+        color: white;
+        font-size: 0.8em;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .threat-critical { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .threat-high { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .threat-medium { background: linear-gradient(135deg, #f59e0b, #b45309); }
+    .threat-low { background: linear-gradient(135deg, #10b981, #059669); }
+
+    .report-main {
+        margin-bottom: 20px;
+    }
+
+    .report-main h4 {
+        color: #e2e8f0;
+        margin: 0 0 10px 0;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .report-main p {
+        color: #94a3b8;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .report-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+        padding: 20px;
+        background: #0f172a;
+        border-radius: 8px;
+        border: 1px solid #334155;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .detail-label {
+        font-size: 0.8em;
+        color: #94a3b8;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #e2e8f0;
+        font-size: 1rem;
+    }
+
+    .report-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn-sm {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #94a3b8;
+        background: #1e293b;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        border: 1px solid #334155;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #475569;
+        opacity: 0.7;
+    }
+
+    .empty-state h3 {
+        color: #e2e8f0;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        margin-bottom: 25px;
+        font-size: 1.1rem;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+        gap: 15px;
+    }
+
+    .export-section {
+        background: #1e293b;
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 40px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        text-align: center;
+        border: 1px solid #334155;
+    }
+
+    .export-section h3 {
+        color: #e2e8f0;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .export-section p {
+        color: #94a3b8;
+        margin-bottom: 25px;
+    }
+
+    .export-options {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .text-muted {
+        color: #94a3b8 !important;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        background-color: #1e293b;
+        margin: 5% auto;
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        position: relative;
+        border: 1px solid #334155;
+        color: #e2e8f0;
+    }
+
+    .close {
+        color: #94a3b8;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        transition: color 0.3s ease;
+    }
+
+    .close:hover {
+        color: #ef4444;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .reports-header {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+        
+        .header-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .report-details {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .report-actions {
+            flex-direction: column;
+        }
+        
+        .export-options {
+            flex-direction: column;
+        }
+    }
+
+    /* Animation for report cards */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+    <!-- Header -->
+    <div class="reports-header">
+        <h1><i class="fas fa-file-alt"></i> Threat Assessment Reports</h1>
+        <div class="header-actions">
+            <button class="btn btn-primary" onclick="loadAnalysisResultsFromAPI()">
+                <i class="fas fa-sync-alt"></i> Refresh Reports
+            </button>
+            <button class="btn btn-success" onclick="exportAllReports()">
+                <i class="fas fa-file-pdf"></i> Export All
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+        <div class="stat-card">
+            <div class="stat-number" id="totalReports">0</div>
+            <div class="stat-label">Total Reports</div>
+        </div>
+        <div class="stat-card critical">
+            <div class="stat-number" id="criticalReports">0</div>
+            <div class="stat-label">Critical Threats</div>
+        </div>
+        <div class="stat-card high">
+            <div class="stat-number" id="highReports">0</div>
+            <div class="stat-label">High Threats</div>
+        </div>
+        <div class="stat-card medium">
+            <div class="stat-number" id="mediumReports">0</div>
+            <div class="stat-label">Medium Threats</div>
+        </div>
+        <div class="stat-card low">
+            <div class="stat-number" id="lowReports">0</div>
+            <div class="stat-label">Low Threats</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <h3><i class="fas fa-filter"></i> Filter Reports</h3>
+        <div class="filter-grid">
+            <div class="form-group">
+                <label>Threat Level:</label>
+                <select id="threatFilter" class="form-select">
+                    <option value="all">All Levels</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Vehicle Type:</label>
+                <select id="vehicleFilter" class="form-select">
+                    <option value="all">All Vehicles</option>
+                    <option value="T72">T72 Tank</option>
+                    <option value="T62">T62 Tank</option>
+                    <option value="BMP2">BMP2</option>
+                    <option value="BTR70">BTR70</option>
+                    <option value="ZSU_23_4">ZSU-23-4</option>
+                    <option value="2S1">2S1</option>
+                    <option value="BRDM2">BRDM2</option>
+                    <option value="D7">D7 Bulldozer</option>
+                    <option value="ZIL132">ZIL132 Truck</option>
+                    <option value="SLICY">Civilian Vehicle</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Confidence Level:</label>
+                <select id="confidenceFilter" class="form-select">
+                    <option value="all">All Confidence</option>
+                    <option value="high">High (≥ 85%)</option>
+                    <option value="medium">Medium (60-84%)</option>
+                    <option value="low">Low (< 60%)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Sort By:</label>
+                <select id="sortFilter" class="form-select">
+                    <option value="date">Date (Newest)</option>
+                    <option value="date_old">Date (Oldest)</option>
+                    <option value="threat">Threat Level</option>
+                    <option value="confidence">Confidence</option>
+                </select>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 10px 20px;">
+                <i class="fas fa-times"></i> Clear Filters
+            </button>
+            <div style="flex: 1;"></div>
+            <span id="reportCount" class="text-muted">
+                Showing 0 reports
+            </span>
+        </div>
+    </div>
+
+    <!-- Reports Grid -->
+    <div class="reports-grid" id="reportsGrid">
+        <!-- Reports will be loaded here dynamically -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button class="btn btn-secondary" id="prevPage">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span id="pageInfo">Page 1 of 1</span>
+        <button class="btn btn-secondary" id="nextPage">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <!-- Export Section -->
+    <div class="export-section">
+        <h3><i class="fas fa-download"></i> Export Options</h3>
+        <p>Export reports for offline analysis or sharing with command centers</p>
+        <div class="export-options">
+            <button class="btn btn-success" onclick="exportAllReports()">
+                <i class="fas fa-file-pdf"></i> Export All to PDF
+            </button>
+            <button class="btn btn-primary" onclick="exportFilteredReports()">
+                <i class="fas fa-file-excel"></i> Export Filtered to Excel
+            </button>
+            <button class="btn btn-secondary" onclick="exportSummary()">
+                <i class="fas fa-chart-bar"></i> Export Summary Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Report Detail Modal -->
+<div id="reportModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="reportDetailContent">
+            <!-- Report detail will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script>
+    // Global variables
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let allReports = [];
+    let filteredReports = [];
+
+    // Initialize jsPDF
+    const { jsPDF } = window.jspdf;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up event listeners for filters
+        setupFilterListeners();
+        
+        // Set up pagination event listeners
+        setupPagination();
+        
+        // Load recent analysis data from Flask API
+        loadAnalysisResultsFromAPI();
+    });
+
+    // Set up pagination event listeners
+    function setupPagination() {
+        const prevBtn = document.getElementById('prevPage');
+        const nextBtn = document.getElementById('nextPage');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    showPage(currentPage - 1);
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    showPage(currentPage + 1);
+                }
+            });
+        }
+    }
+
+    // Set up event listeners for all filter changes
+    function setupFilterListeners() {
+        const threatFilter = document.getElementById('threatFilter');
+        const vehicleFilter = document.getElementById('vehicleFilter');
+        const confidenceFilter = document.getElementById('confidenceFilter');
+        const sortFilter = document.getElementById('sortFilter');
+
+        threatFilter.addEventListener('change', applyFilters);
+        vehicleFilter.addEventListener('change', applyFilters);
+        confidenceFilter.addEventListener('change', applyFilters);
+        sortFilter.addEventListener('change', applyFilters);
+    }
+
+    // Load analysis results from Flask API
+    async function loadAnalysisResultsFromAPI() {
+        try {
+            showNotification('Loading analysis results...', 'info');
+            
+            const response = await fetch('/api/get-analysis-results');
+            const data = await response.json();
+            
+            if (data.success) {
+                console.log('Loaded analysis results:', data);
+                
+                // Check if we have results in the response
+                if (!data.results || data.results.length === 0) {
+                    showNotification('No analysis results found. Perform some analyses first.', 'info');
+                    allReports = [];
+                    applyFilters();
+                    return;
+                }
+                
+                // Convert API data to report format - FIXED: using data.results not data.analysis_results
+                allReports = data.results.map(analysis => {
+                    const prediction = analysis.prediction || {};
+                    const threatAssessment = analysis.threat_assessment || {};
+                    
+                    // Parse timestamp
+                    let timestamp;
+                    if (analysis.timestamp) {
+                        timestamp = new Date(analysis.timestamp);
+                    } else if (prediction.timestamp) {
+                        timestamp = new Date(prediction.timestamp);
+                    } else if (threatAssessment.timestamp) {
+                        timestamp = new Date(threatAssessment.timestamp);
+                    } else {
+                        timestamp = new Date();
+                    }
+                    
+                    // Get vehicle name
+                    let vehicleName = prediction.predicted_class_name || threatAssessment.predicted_class_name || 'Unknown Vehicle';
+                    
+                    // Handle rejected or unknown cases
+                    if (vehicleName === 'REJECTED' || vehicleName === 'REJECTED - Not a SAR image') {
+                        vehicleName = 'Rejected Image';
+                    } else if (vehicleName === 'Unknown / Low confidence') {
+                        vehicleName = 'Unknown Vehicle';
+                    }
+                    
+                    // Get threat level
+                    let threatLevel = (threatAssessment.threat_level || 'low').toLowerCase();
+                    if (threatLevel === 'rejected' || threatLevel === 'unknown') {
+                        threatLevel = 'low';
+                    }
+                    
+                    // Get confidence
+                    let confidence = Math.round((prediction.confidence || threatAssessment.confidence || 0.5) * 100);
+                    if (isNaN(confidence)) confidence = 50;
+                    
+                    return {
+                        id: analysis.reportId || `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                        vehicle: vehicleName,
+                        threatLevel: threatLevel,
+                        confidence: confidence,
+                        threatScore: threatAssessment.threat_score || 0.5,
+                        date: timestamp.toISOString().split('T')[0],
+                        time: timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                        description: threatAssessment.class_description || getVehicleDescription(vehicleName),
+                        timestamp: timestamp.toISOString(),
+                        rawData: analysis // Store original data for reference
+                    };
+                });
+
+                console.log('Processed reports:', allReports);
+                showNotification(`Loaded ${allReports.length} analysis results`, 'success');
+            } else {
+                console.error('Failed to load analysis results:', data.error);
+                showNotification('Failed to load analysis results: ' + (data.error || 'Unknown error'), 'error');
+                allReports = [];
+            }
+        } catch (error) {
+            console.error('Error loading analysis results:', error);
+            showNotification('Error loading analysis results. Check console for details.', 'error');
+            allReports = [];
+        }
+        
+        // Apply initial filters and render
+        applyFilters();
+        calculateStats();
+    }
+
+    function getVehicleDescription(vehicleName) {
+        const descriptions = {
+            'T72': 'Main Battle Tank - High mobility and firepower, significant threat to ground forces',
+            'T62': 'Main Battle Tank - Older model but still significant combat capability',
+            'BMP2': 'Infantry Fighting Vehicle - Armored personnel carrier with medium firepower',
+            'BTR70': 'Armored Personnel Carrier - Medium threat with troop transport capability',
+            'ZSU_23_4': 'Self-Propelled Anti-Aircraft Gun - Air defense system with limited ground threat',
+            '2S1': 'Self-Propelled Howitzer - Artillery vehicle with indirect fire capability',
+            'BRDM2': 'Armored Scout Car - Light reconnaissance vehicle with minimal threat',
+            'ZIL132': 'Military Transport Truck - Logistics vehicle with no direct combat capability',
+            'D7': 'Bulldozer - Engineering vehicle with no combat capability',
+            'SLICY': 'Civilian Vehicle - Standard target type used in SAR datasets',
+            'Rejected Image': 'Image was rejected by SAR validation system',
+            'Unknown Vehicle': 'Vehicle type could not be determined with sufficient confidence'
+        };
+        return descriptions[vehicleName] || 'Military vehicle detected by SAR imaging system';
+    }
+
+    // Main filter function that applies all filters
+    function applyFilters() {
+        const threatFilter = document.getElementById('threatFilter').value;
+        const vehicleFilter = document.getElementById('vehicleFilter').value;
+        const confidenceFilter = document.getElementById('confidenceFilter').value;
+        const sortBy = document.getElementById('sortFilter').value;
+        
+        console.log('Applying filters:', { threatFilter, vehicleFilter, confidenceFilter, sortBy });
+        
+        // Start with all reports
+        filteredReports = [...allReports];
+        
+        // Apply threat level filter
+        if (threatFilter !== 'all') {
+            filteredReports = filteredReports.filter(report => 
+                report.threatLevel === threatFilter
+            );
+        }
+        
+        // Apply vehicle type filter
+        if (vehicleFilter !== 'all') {
+            filteredReports = filteredReports.filter(report => 
+                report.vehicle.includes(vehicleFilter)
+            );
+        }
+        
+        // Apply confidence filter
+        if (confidenceFilter !== 'all') {
+            filteredReports = filteredReports.filter(report => {
+                if (confidenceFilter === 'high') return report.confidence >= 85;
+                if (confidenceFilter === 'medium') return report.confidence >= 60 && report.confidence < 85;
+                if (confidenceFilter === 'low') return report.confidence < 60;
+                return true;
+            });
+        }
+        
+        // Apply sorting
+        filteredReports.sort((a, b) => {
+            switch(sortBy) {
+                case 'threat':
+                    const threatOrder = {critical: 4, high: 3, medium: 2, low: 1};
+                    return threatOrder[b.threatLevel] - threatOrder[a.threatLevel];
+                    
+                case 'confidence':
+                    return b.confidence - a.confidence;
+                    
+                case 'date':
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+                    
+                case 'date_old':
+                    return new Date(a.timestamp) - new Date(b.timestamp);
+                    
+                default:
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+            }
+        });
+        
+        console.log('Filtered reports:', filteredReports);
+        renderReports();
+        calculateStats();
+    }
+
+    function renderReports() {
+        const reportsGrid = document.getElementById('reportsGrid');
+        reportsGrid.innerHTML = '';
+        
+        if (filteredReports.length === 0) {
+            reportsGrid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-file-search"></i>
+                    <h3>No Reports Found</h3>
+                    <p>No threat assessment reports match your current filters or no analyses have been performed yet.</p>
+                    <button class="btn btn-primary" onclick="loadAnalysisResultsFromAPI()">
+                        <i class="fas fa-sync-alt"></i> Refresh Reports
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearFilters()" style="margin-top: 10px;">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </button>
+                </div>
+            `;
+            
+            // Update pagination buttons for empty state
+            updatePaginationButtons();
+            updateReportCount();
+            return;
+        }
+        
+        // Create all report cards (they'll be shown/hidden by showPage)
+        filteredReports.forEach(report => {
+            const reportCard = createReportCard(report);
+            reportsGrid.appendChild(reportCard);
+        });
+        
+        // Show first page
+        showPage(1);
+        updateReportCount();
+        updatePaginationButtons();
+    }
+
+    function createReportCard(report) {
+        const card = document.createElement('div');
+        card.className = `report-card ${report.threatLevel}`;
+        card.setAttribute('onclick', `viewReport('${report.id}')`);
+        
+        card.innerHTML = `
+            <div class="report-header">
+                <div class="report-id">${report.id}</div>
+                <div class="report-threat threat-${report.threatLevel}">
+                    ${report.threatLevel.toUpperCase()}
+                </div>
+            </div>
+            
+            <div class="report-main">
+                <h4>
+                    <i class="fas ${getVehicleIcon(report.vehicle)}"></i>
+                    ${report.vehicle}
+                </h4>
+                <p>${report.description}</p>
+            </div>
+
+            <div class="report-details">
+                <div class="detail-item">
+                    <span class="detail-label">Confidence</span>
+                    <span class="detail-value">${report.confidence}%</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Threat Score</span>
+                    <span class="detail-value">${report.threatScore.toFixed(3)}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Detection Time</span>
+                    <span class="detail-value">${report.date}<br><small>${report.time}</small></span>
+                </div>
+            </div>
+
+            <div class="report-actions">
+                <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); viewReport('${report.id}')">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
+                <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); exportSingleReport('${report.id}')">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deleteReport('${report.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
+        `;
+        
+        return card;
+    }
+
+    function getVehicleIcon(vehicle) {
+        const icons = {
+            'T72': 'fa-tank',
+            'T62': 'fa-tank',
+            'BMP2': 'fa-shield-alt',
+            'BTR70': 'fa-shield-alt',
+            'ZSU_23_4': 'fa-radar',
+            '2S1': 'fa-truck-monster',
+            'BRDM2': 'fa-truck-pickup',
+            'ZIL132': 'fa-truck',
+            'D7': 'fa-tractor',
+            'SLICY': 'fa-car',
+            'Rejected Image': 'fa-ban',
+            'Unknown Vehicle': 'fa-question-circle'
+        };
+        return icons[vehicle] || 'fa-vehicle';
+    }
+
+    function calculateStats() {
+        const critical = allReports.filter(r => r.threatLevel === 'critical').length;
+        const high = allReports.filter(r => r.threatLevel === 'high').length;
+        const medium = allReports.filter(r => r.threatLevel === 'medium').length;
+        const low = allReports.filter(r => r.threatLevel === 'low').length;
+        const total = allReports.length;
+        
+        document.getElementById('totalReports').textContent = total;
+        document.getElementById('criticalReports').textContent = critical;
+        document.getElementById('highReports').textContent = high;
+        document.getElementById('mediumReports').textContent = medium;
+        document.getElementById('lowReports').textContent = low;
+    }
+
+    function updateReportCount() {
+        const count = filteredReports.length;
+        document.getElementById('reportCount').textContent = `Showing ${count} report${count !== 1 ? 's' : ''}`;
+    }
+
+    function showPage(page) {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        
+        // Get all report cards
+        const reportCards = document.querySelectorAll('.report-card');
+        
+        // Hide all reports
+        reportCards.forEach(card => {
+            card.style.display = 'none';
+        });
+        
+        // Show reports for current page
+        const currentReports = Array.from(reportCards).slice(startIndex, endIndex);
+        currentReports.forEach(card => {
+            card.style.display = 'block';
+        });
+        
+        // Update page info
+        const totalPages = Math.ceil(filteredReports.length / itemsPerPage) || 1;
+        document.getElementById('pageInfo').textContent = `Page ${page} of ${totalPages}`;
+        
+        currentPage = page;
+        updatePaginationButtons();
+    }
+
+    function updatePaginationButtons() {
+        const prevBtn = document.getElementById('prevPage');
+        const nextBtn = document.getElementById('nextPage');
+        const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+        
+        if (prevBtn) {
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+            prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+        }
+        
+        if (nextBtn) {
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.style.opacity = (currentPage === totalPages || totalPages === 0) ? '0.5' : '1';
+            nextBtn.style.cursor = (currentPage === totalPages || totalPages === 0) ? 'not-allowed' : 'pointer';
+        }
+    }
+
+    function clearFilters() {
+        document.getElementById('threatFilter').value = 'all';
+        document.getElementById('vehicleFilter').value = 'all';
+        document.getElementById('confidenceFilter').value = 'all';
+        document.getElementById('sortFilter').value = 'date';
+        
+        applyFilters();
+        showNotification('Filters cleared', 'info');
+    }
+
+    function viewReport(reportId) {
+        const report = allReports.find(r => r.id === reportId);
+        if (!report) return;
+        
+        const modal = document.getElementById('reportModal');
+        const content = document.getElementById('reportDetailContent');
+        
+        // Get raw data for detailed view
+        const rawData = report.rawData || {};
+        
+        content.innerHTML = `
+            <h2 style="color: #e2e8f0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-file-alt"></i> Detailed Report: ${report.id}
+            </h2>
+            
+            <div style="background: #0f172a; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #334155;">
+                <h3 style="color: #e2e8f0; margin-bottom: 15px;">Executive Summary</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="color: #cbd5e1;">
+                        <strong style="color: #e2e8f0;">Vehicle Type:</strong> ${report.vehicle}<br>
+                        <strong style="color: #e2e8f0;">Threat Level:</strong> <span class="report-threat threat-${report.threatLevel}">${report.threatLevel.toUpperCase()}</span><br>
+                        <strong style="color: #e2e8f0;">Confidence:</strong> ${report.confidence}%
+                    </div>
+                    <div style="color: #cbd5e1;">
+                        <strong style="color: #e2e8f0;">Detection Date:</strong> ${report.date}<br>
+                        <strong style="color: #e2e8f0;">Detection Time:</strong> ${report.time}<br>
+                        <strong style="color: #e2e8f0;">Threat Score:</strong> ${report.threatScore.toFixed(3)}
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #e2e8f0; margin-bottom: 15px;">Vehicle Description</h3>
+                <p style="color: #94a3b8;">${report.description}</p>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #e2e8f0; margin-bottom: 15px;">Analysis Details</h3>
+                <div style="background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #334155;">
+                    <p style="color: #94a3b8; margin: 0;">
+                        <strong>Report ID:</strong> ${report.id}<br>
+                        <strong>Processing Stage:</strong> ${rawData.processing_stage || 'COMPLETE'}<br>
+                        <strong>SAR Validation:</strong> ${rawData.sar_validation && rawData.sar_validation.is_sar ? 'PASSED ✓' : 'FAILED ✗'}<br>
+                        <strong>Confidence Status:</strong> ${rawData.prediction && rawData.prediction.confidence_status || 'UNKNOWN'}
+                    </p>
+                </div>
+            </div>
+            
+            <div>
+                <h3 style="color: #e2e8f0; margin-bottom: 15px;">Recommended Actions</h3>
+                <ul style="color: #94a3b8; line-height: 1.6; padding-left: 20px;">
+                    ${getRecommendations(report.threatLevel.toUpperCase())}
+                </ul>
+            </div>
+        `;
+        
+        modal.style.display = 'block';
+    }
+
+    function getRecommendations(threatLevel) {
+        const recommendations = {
+            'CRITICAL': [
+                'Immediate verification with additional intelligence sources',
+                'Alert all response teams and command centers',
+                'Execute emergency response protocols',
+                'Prepare defensive measures and counter-operations',
+                'Maintain highest alert status until threat is neutralized'
+            ],
+            'HIGH': [
+                'Immediate threat verification required',
+                'Notify command center and response teams',
+                'Increase surveillance in the area',
+                'Prepare contingency plans',
+                'Coordinate with nearby military units'
+            ],
+            'MEDIUM': [
+                'Increase monitoring frequency',
+                'Notify command center for assessment',
+                'Prepare verification protocols',
+                'Track vehicle movement patterns',
+                'Maintain standard alert levels'
+            ],
+            'LOW': [
+                'Continue routine monitoring operations',
+                'Log detection for intelligence purposes',
+                'No immediate action required',
+                'Maintain standard observation protocols'
+            ]
+        };
+        
+        return recommendations[threatLevel].map(rec => `<li>${rec}</li>`).join('');
+    }
+
+    function closeModal() {
+        document.getElementById('reportModal').style.display = 'none';
+    }
+
+    // Export single report as PDF
+    function exportSingleReport(reportId) {
+        const report = allReports.find(r => r.id === reportId);
+        if (!report) {
+            showNotification('Report not found', 'error');
+            return;
+        }
+
+        try {
+            showNotification(`Generating PDF for ${reportId}...`, 'info');
+            
+            const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            let yPos = 20;
+
+            // Header
+            doc.setFillColor(41, 128, 185);
+            doc.rect(0, 0, pageWidth, 50, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text('SAR ATR SYSTEM', pageWidth / 2, 20, { align: 'center' });
+            doc.setFontSize(14);
+            doc.text('THREAT ASSESSMENT REPORT', pageWidth / 2, 30, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text(`Report: ${report.id}`, pageWidth / 2, 42, { align: 'center' });
+
+            // Content
+            doc.setTextColor(0, 0, 0);
+            yPos = 70;
+
+            // Vehicle Information
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Vehicle Information', 20, yPos);
+            yPos += 15;
+
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Vehicle Type: ${report.vehicle}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Threat Level: ${report.threatLevel.toUpperCase()}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Confidence: ${report.confidence}%`, 20, yPos);
+            yPos += 8;
+            doc.text(`Threat Score: ${report.threatScore.toFixed(3)}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Detection Date: ${report.date}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Detection Time: ${report.time}`, 20, yPos);
+            yPos += 15;
+
+            // Description
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Vehicle Description', 20, yPos);
+            yPos += 10;
+
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            const descriptionLines = doc.splitTextToSize(report.description, pageWidth - 40);
+            doc.text(descriptionLines, 20, yPos);
+            yPos += descriptionLines.length * 6 + 15;
+
+            // Recommended Actions
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Recommended Actions', 20, yPos);
+            yPos += 10;
+
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            const recommendations = getPDFRecommendations(report.threatLevel.toUpperCase());
+            recommendations.forEach((rec, index) => {
+                if (yPos > 250) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                doc.text('• ' + rec, 25, yPos);
+                yPos += 8;
+            });
+
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(128, 128, 128);
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth / 2, 280, { align: 'center' });
+            doc.text('SAR ATR System - Confidential', pageWidth / 2, 285, { align: 'center' });
+
+            // Save PDF
+            doc.save(`threat_report_${report.id}.pdf`);
+            showNotification(`PDF report for ${report.id} generated successfully!`, 'success');
+            
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            showNotification('Error generating PDF report', 'error');
+        }
+    }
+
+    function getPDFRecommendations(threatLevel) {
+        const recommendations = {
+            'CRITICAL': [
+                'Immediate verification with additional intelligence sources',
+                'Alert all response teams and command centers',
+                'Execute emergency response protocols',
+                'Prepare defensive measures and counter-operations',
+                'Maintain highest alert status until threat is neutralized'
+            ],
+            'HIGH': [
+                'Immediate threat verification required',
+                'Notify command center and response teams',
+                'Increase surveillance in the area',
+                'Prepare contingency plans',
+                'Coordinate with nearby military units'
+            ],
+            'MEDIUM': [
+                'Increase monitoring frequency',
+                'Notify command center for assessment',
+                'Prepare verification protocols',
+                'Track vehicle movement patterns',
+                'Maintain standard alert levels'
+            ],
+            'LOW': [
+                'Continue routine monitoring operations',
+                'Log detection for intelligence purposes',
+                'No immediate action required',
+                'Maintain standard observation protocols'
+            ]
+        };
+        return recommendations[threatLevel] || [];
+    }
+
+    // Export all reports as PDF
+    function exportAllReports() {
+        if (allReports.length === 0) {
+            showNotification('No reports to export', 'warning');
+            return;
+        }
+
+        try {
+            showNotification('Generating PDF for all reports...', 'info');
+            
+            const doc = new jsPDF();
+            let yPos = 20;
+            
+            // Header
+            doc.setFillColor(41, 128, 185);
+            doc.rect(0, 0, doc.internal.pageSize.getWidth(), 50, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text('SAR ATR SYSTEM', 105, 25, { align: 'center' });
+            doc.setFontSize(16);
+            doc.text('COMPLETE ANALYSIS REPORT', 105, 35, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 105, 45, { align: 'center' });
+            
+            yPos = 70;
+            doc.setTextColor(0, 0, 0);
+            
+            // Summary
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('EXECUTIVE SUMMARY', 20, yPos);
+            yPos += 15;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Total Reports: ${allReports.length}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Critical Threats: ${allReports.filter(r => r.threatLevel === 'critical').length}`, 20, yPos);
+            yPos += 8;
+            doc.text(`High Threats: ${allReports.filter(r => r.threatLevel === 'high').length}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Medium Threats: ${allReports.filter(r => r.threatLevel === 'medium').length}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Low Threats: ${allReports.filter(r => r.threatLevel === 'low').length}`, 20, yPos);
+            yPos += 20;
+            
+            // Individual Reports
+            allReports.forEach((report, index) => {
+                if (yPos > 250) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${index + 1}. ${report.vehicle} (${report.threatLevel.toUpperCase()})`, 20, yPos);
+                yPos += 10;
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Confidence: ${report.confidence}% | Date: ${report.date} | Time: ${report.time}`, 25, yPos);
+                yPos += 6;
+                doc.text(`Threat Score: ${report.threatScore.toFixed(3)}`, 25, yPos);
+                yPos += 10;
+            });
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(128, 128, 128);
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, 105, 280, { align: 'center' });
+            doc.text('SAR ATR System - Confidential', 105, 285, { align: 'center' });
+            
+            doc.save(`sar_atr_complete_report_${new Date().getTime()}.pdf`);
+            showNotification('Complete PDF report generated successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            showNotification('Error generating PDF report', 'error');
+        }
+    }
+
+    // Export filtered reports as Excel (CSV)
+    function exportFilteredReports() {
+        if (filteredReports.length === 0) {
+            showNotification('No filtered reports to export', 'warning');
+            return;
+        }
+
+        try {
+            showNotification('Generating Excel file...', 'info');
+            
+            let csv = 'Report ID,Vehicle Type,Threat Level,Confidence %,Threat Score,Detection Date,Detection Time,Description\n';
+            
+            filteredReports.forEach(report => {
+                const row = [
+                    report.id,
+                    report.vehicle,
+                    report.threatLevel.toUpperCase(),
+                    report.confidence + '%',
+                    report.threatScore.toFixed(3),
+                    report.date,
+                    report.time,
+                    report.description.replace(/"/g, '""')
+                ].map(field => `"${field}"`).join(',');
+                
+                csv += row + '\n';
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `sar_atr_filtered_reports_${new Date().getTime()}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Excel file exported successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Error generating Excel file:', error);
+            showNotification('Error generating Excel file', 'error');
+        }
+    }
+
+    // Export summary report
+    function exportSummary() {
+        if (allReports.length === 0) {
+            showNotification('No reports to summarize', 'warning');
+            return;
+        }
+
+        try {
+            showNotification('Generating summary report...', 'info');
+            
+            const doc = new jsPDF();
+            let yPos = 20;
+            
+            // Header
+            doc.setFillColor(41, 128, 185);
+            doc.rect(0, 0, doc.internal.pageSize.getWidth(), 50, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text('SAR ATR SYSTEM', 105, 25, { align: 'center' });
+            doc.setFontSize(16);
+            doc.text('SUMMARY ANALYSIS REPORT', 105, 35, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 105, 45, { align: 'center' });
+            
+            yPos = 70;
+            doc.setTextColor(0, 0, 0);
+            
+            // Summary Statistics
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('SUMMARY STATISTICS', 20, yPos);
+            yPos += 15;
+            
+            const total = allReports.length;
+            const critical = allReports.filter(r => r.threatLevel === 'critical').length;
+            const high = allReports.filter(r => r.threatLevel === 'high').length;
+            const medium = allReports.filter(r => r.threatLevel === 'medium').length;
+            const low = allReports.filter(r => r.threatLevel === 'low').length;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Total Analyses Performed: ${total}`, 20, yPos);
+            yPos += 8;
+            doc.text(`Critical Threat Percentage: ${((critical / total) * 100).toFixed(1)}% (${critical} reports)`, 20, yPos);
+            yPos += 8;
+            doc.text(`High Threat Percentage: ${((high / total) * 100).toFixed(1)}% (${high} reports)`, 20, yPos);
+            yPos += 8;
+            doc.text(`Medium Threat Percentage: ${((medium / total) * 100).toFixed(1)}% (${medium} reports)`, 20, yPos);
+            yPos += 8;
+            doc.text(`Low Threat Percentage: ${((low / total) * 100).toFixed(1)}% (${low} reports)`, 20, yPos);
+            yPos += 20;
+            
+            // Vehicle Distribution
+            const vehicleCounts = {};
+            allReports.forEach(report => {
+                vehicleCounts[report.vehicle] = (vehicleCounts[report.vehicle] || 0) + 1;
+            });
+            
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('VEHICLE DISTRIBUTION', 20, yPos);
+            yPos += 15;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            
+            Object.entries(vehicleCounts).sort((a, b) => b[1] - a[1]).forEach(([vehicle, count]) => {
+                if (yPos > 250) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                const percentage = ((count / total) * 100).toFixed(1);
+                doc.text(`${vehicle}: ${count} (${percentage}%)`, 25, yPos);
+                yPos += 8;
+            });
+            
+            yPos += 10;
+            
+            // Average Confidence
+            const avgConfidence = allReports.reduce((sum, report) => sum + report.confidence, 0) / total;
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('PERFORMANCE METRICS', 20, yPos);
+            yPos += 15;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Average Confidence: ${avgConfidence.toFixed(1)}%`, 20, yPos);
+            yPos += 8;
+            
+            // Time Range
+            const dates = allReports.map(r => new Date(r.timestamp)).sort((a, b) => a - b);
+            const firstDate = dates[0].toLocaleDateString();
+            const lastDate = dates[dates.length - 1].toLocaleDateString();
+            
+            doc.text(`Analysis Time Range: ${firstDate} to ${lastDate}`, 20, yPos);
+            yPos += 20;
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(128, 128, 128);
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, 105, 280, { align: 'center' });
+            doc.text('SAR ATR System - Confidential', 105, 285, { align: 'center' });
+            
+            doc.save(`sar_atr_summary_report_${new Date().getTime()}.pdf`);
+            showNotification('Summary report generated successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Error generating summary report:', error);
+            showNotification('Error generating summary report', 'error');
+        }
+    }
+
+    // Delete report using Flask API
+    async function deleteReport(reportId) {
+        if (confirm('Are you sure you want to delete this report? This action cannot be undone.')) {
+            showNotification(`Deleting report ${reportId}...`, 'info');
+            
+            try {
+                const response = await fetch('/api/delete-analysis-result', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ reportId: reportId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Remove from local data
+                    allReports = allReports.filter(r => r.id !== reportId);
+                    applyFilters();
+                    calculateStats();
+                    showNotification(`Report ${reportId} deleted successfully!`, 'success');
+                } else {
+                    showNotification(`Failed to delete report: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting report:', error);
+                showNotification('Error deleting report', 'error');
+            }
+        }
+    }
+
+    // Notification function
+    function showNotification(message, type = 'info') {
+        // Remove existing notification
+        const existingNotification = document.querySelector('.notification-toast');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+        
+        const notification = document.createElement('div');
+        notification.className = `notification-toast notification-${type}`;
+        notification.innerHTML = `
+            <span>${message}</span>
+            <button onclick="this.parentElement.remove()">&times;</button>
+        `;
+        
+        // Add some basic styling for the notification
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        `;
+        
+        // Set background color based on type
+        const colors = {
+            'success': '#10b981',
+            'error': '#ef4444',
+            'info': '#3b82f6',
+            'warning': '#f59e0b'
+        };
+        notification.style.backgroundColor = colors[type] || colors.info;
+        
+        // Close button style
+        notification.querySelector('button').style.cssText = `
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 15px;
+            padding: 0 5px;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 5000);
+        
+        // Add animation keyframes
+        if (!document.querySelector('#notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('reportModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+</script>
+{% endblock %}

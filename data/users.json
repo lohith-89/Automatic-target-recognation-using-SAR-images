@@ -1,0 +1,20 @@
+{
+  "admin": {
+    "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "role": "admin",
+    "email": "admin@system.com",
+    "created_at": "2025-11-29T15:52:57.286003"
+  },
+  "operator": {
+    "password": "ec6e1c25258002eb1c67d15c7f45da7945fa4c58778fd7d88faa5e53e3b4698d",
+    "role": "operator",
+    "email": "operator@system.com",
+    "created_at": "2025-11-29T15:52:57.286003"
+  },
+  "viewer": {
+    "password": "65375049b9e4d7cad6c9ba286fdeb9394b28135a3e84136404cfccfdcc438894",
+    "role": "viewer",
+    "email": "viewer@system.com",
+    "created_at": "2025-11-29T15:52:57.286003"
+  }
+}

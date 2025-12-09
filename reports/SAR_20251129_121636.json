@@ -1,0 +1,63 @@
+{
+  "report_id": "SAR_20251129_121636",
+  "timestamp": "2025-11-29T12:16:36.530718",
+  "executive_summary": {
+    "overall_threat_level": "LOW",
+    "predicted_class": "SLICY",
+    "confidence_score": 1.0,
+    "key_findings": "Detected SLICY (Civilian vehicle) with 100.00% confidence - Threat Level: LOW"
+  },
+  "prediction_analysis": {
+    "predicted_class": 6,
+    "predicted_class_name": "SLICY",
+    "confidence": 1.0,
+    "all_predictions": [
+      [
+        0.0,
+        1.9803820024461392e-28,
+        1.3240993460724497e-28,
+        0.0,
+        0.0,
+        9.555786432376307e-34,
+        1.0,
+        0.0,
+        4.5914533500318445e-38,
+        4.7676066002944785e-37,
+        1.3260924422359002e-33
+      ]
+    ],
+    "top_3_predictions": [
+      {
+        "class_name": "SLICY",
+        "confidence": 1.0,
+        "threat_level": "LOW"
+      },
+      {
+        "class_name": "BMP2",
+        "confidence": 1.9803820024461392e-28,
+        "threat_level": "HIGH"
+      },
+      {
+        "class_name": "BRDM2",
+        "confidence": 1.3240993460724497e-28,
+        "threat_level": "MEDIUM"
+      }
+    ],
+    "timestamp": "2025-11-29T12:16:36.529698"
+  },
+  "threat_assessment": {
+    "threat_level": "LOW",
+    "threat_score": 0.2,
+    "confidence": 1.0,
+    "predicted_class": 6,
+    "predicted_class_name": "SLICY",
+    "class_description": "Civilian vehicle",
+    "base_threat": "LOW",
+    "timestamp": "2025-11-29T12:16:36.530718"
+  },
+  "recommendations": [
+    "Continue routine monitoring",
+    "No immediate action required",
+    "Log for intelligence purposes"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "report_id": "SAR_20251129_152537",
+  "timestamp": "2025-11-29T15:25:37.950159",
+  "executive_summary": {
+    "overall_threat_level": "LOW",
+    "predicted_class": "ZIL132",
+    "confidence_score": 0.92,
+    "key_findings": "Detected ZIL132 (Truck - Transport vehicle) with 92.00% confidence - Threat Level: LOW"
+  },
+  "prediction_analysis": {
+    "predicted_class": 9,
+    "predicted_class_name": "ZIL132",
+    "confidence": 0.92,
+    "timestamp": "2025-11-29T15:25:37.950159"
+  },
+  "threat_assessment": {
+    "threat_level": "LOW",
+    "threat_score": 0.18400000000000002,
+    "confidence": 0.92,
+    "predicted_class": 9,
+    "predicted_class_name": "ZIL132",
+    "class_description": "Truck - Transport vehicle",
+    "base_threat": "LOW",
+    "timestamp": "2025-11-29T15:25:37.950159"
+  },
+  "recommendations": [
+    "Continue routine monitoring",
+    "No immediate action required",
+    "Log for intelligence purposes"
+  ]
+}
