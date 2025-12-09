@@ -364,6 +364,18 @@
       "acknowledged": false,
       "message": "HIGH threat detected: 2S1",
       "sar_validated": true
+    },
+    {
+      "id": "alarm_1765263847_32",
+      "threat_level": "HIGH",
+      "vehicle_type": "2S1",
+      "confidence": 0.9970923662185669,
+      "threat_score": 0.8353021678924561,
+      "timestamp": "2025-12-09T12:34:07.505324",
+      "image_data": null,
+      "acknowledged": false,
+      "message": "HIGH threat detected: 2S1",
+      "sar_validated": true
     }
   ],
   "alarm_history": [
@@ -727,6 +739,18 @@
       "confidence": 0.9970923662185669,
       "threat_score": 0.8353021678924561,
       "timestamp": "2025-12-08T21:12:37.365905",
+      "image_data": null,
+      "acknowledged": false,
+      "message": "HIGH threat detected: 2S1",
+      "sar_validated": true
+    },
+    {
+      "id": "alarm_1765263847_32",
+      "threat_level": "HIGH",
+      "vehicle_type": "2S1",
+      "confidence": 0.9970923662185669,
+      "threat_score": 0.8353021678924561,
+      "timestamp": "2025-12-09T12:34:07.505324",
       "image_data": null,
       "acknowledged": false,
       "message": "HIGH threat detected: 2S1",

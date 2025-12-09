@@ -4903,5 +4903,105 @@
     },
     "processing_stage": "COMPLETE",
     "username": "loki"
+  },
+  {
+    "reportId": "report_1765263847_79",
+    "timestamp": "2025-12-09T12:34:07.588939",
+    "prediction": {
+      "predicted_class": 0,
+      "predicted_class_name": "2S1",
+      "confidence": 0.9970923662185669,
+      "all_predictions": [
+        [
+          0.9970923662185669,
+          0.0009817812824621797,
+          0.0008074768120422959,
+          0.00016478907491546124,
+          2.891245821956545e-05,
+          1.7007612314046128e-06,
+          8.362079739754336e-08,
+          0.0001523895625723526,
+          4.573282410547108e-07,
+          0.0007700105779804289,
+          2.521409525613194e-09
+        ]
+      ],
+      "top_3_predictions": [
+        {
+          "class_name": "2S1",
+          "confidence": 0.9970923662185669,
+          "threat_level": "HIGH"
+        },
+        {
+          "class_name": "BMP2",
+          "confidence": 0.0009817812824621797,
+          "threat_level": "HIGH"
+        },
+        {
+          "class_name": "BRDM2",
+          "confidence": 0.0008074768120422959,
+          "threat_level": "MEDIUM"
+        }
+      ],
+      "timestamp": "2025-12-09T12:34:07.504318",
+      "confidence_status": "HIGH_CONFIDENCE",
+      "is_confident": true,
+      "is_rejected": false,
+      "message": "Confidence (99.71%) meets threshold (85%)",
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      }
+    },
+    "threat_assessment": {
+      "threat_level": "HIGH",
+      "threat_score": 0.8353021678924561,
+      "confidence": 0.9970923662185669,
+      "predicted_class_name": "2S1",
+      "class_description": "The 2S1 Gvozdika is a Soviet self-propelled artillery vehicle with a 122mm howitzer.",
+      "base_threat": "HIGH",
+      "timestamp": "2025-12-09T12:34:07.504318",
+      "is_unknown": false,
+      "is_rejected": false,
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      },
+      "sar_score": 0.8,
+      "is_likely_sar": true
+    },
+    "sar_validation": {
+      "is_sar": true,
+      "is_rejected": false,
+      "sar_score": 0.8,
+      "passed_checks": "4/4",
+      "checks_passed": 4,
+      "similarity_score": 0.8,
+      "statistics": {},
+      "check_details": {},
+      "rejection_reasons": null,
+      "diagnostics": "SAR image accepted (100% SAR characteristics)",
+      "validation_type": "simple"
+    },
+    "processing_stage": "COMPLETE",
+    "username": "loki"
   }
 ]
