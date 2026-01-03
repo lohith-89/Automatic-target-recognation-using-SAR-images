@@ -1324,12 +1324,19 @@ def analysis():
         flash('Please log in to access analysis tools', 'error')
         return redirect(url_for('login'))
     
+    # Get fresh parameter to indicate if we want to clear any previous state
+    fresh_load = request.args.get('fresh', 'false').lower() == 'true'
+    
+    # Store a flag in session to indicate we're coming from analysis page
+    session['from_analysis_page'] = True
+    
     return render_template('analysis.html',
                          username=session.get('username', 'Guest'),
                          model_available=downstream_model is not None,
                          vehicle_details=vehicle_details,
                          confidence_threshold=f"{sar_system.threat_assessor.confidence_threshold:.0%}",
-                         simple_sar_validation=True)
+                         simple_sar_validation=True,
+                         fresh_load=fresh_load)
 
 @app.route('/reports')
 def reports():

@@ -37,18 +37,20 @@
             align-items: center;
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            /* Removed overflow: hidden to allow scrolling */
         }
 
-        /* Background animation */
+        /* Background animation - fixed to viewport */
         .bg-animation {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
             opacity: 0.3;
+            pointer-events: none;
         }
 
         .bg-circle {
@@ -95,16 +97,20 @@
         }
 
         .register-container {
-            background: rgba(30, 30, 30, 0.9);
+            background: rgba(30, 30, 30, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             padding: 40px;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             border: 1px solid var(--border);
             position: relative;
             z-index: 1;
+            margin: 20px auto;
+            /* Allow container to grow with content */
+            min-height: auto;
+            overflow: visible;
         }
 
         .register-header {
@@ -126,6 +132,7 @@
             color: var(--text-secondary);
             font-size: 14px;
             margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .system-badge {
@@ -141,6 +148,7 @@
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
@@ -178,10 +186,39 @@
 
         .form-input.valid {
             border-color: var(--success);
+            background: rgba(39, 174, 96, 0.05);
         }
 
         .form-input.invalid {
             border-color: var(--danger);
+            background: rgba(231, 76, 60, 0.05);
+        }
+
+        .input-feedback {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            margin-top: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            animation: fadeIn 0.3s ease;
+            min-height: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-valid {
+            color: var(--success);
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .feedback-invalid {
+            color: var(--danger);
+            background: rgba(231, 76, 60, 0.1);
         }
 
         .register-btn {
@@ -216,6 +253,7 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            opacity: 0.7;
         }
 
         .flash-messages {
@@ -267,6 +305,7 @@
         .login-footer p {
             color: var(--text-secondary);
             margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .login-footer a {
@@ -299,6 +338,7 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 4px;
+            line-height: 1.4;
         }
 
         .requirement.valid {
@@ -311,6 +351,7 @@
 
         .requirement i {
             font-size: 10px;
+            min-width: 12px;
         }
 
         .system-info {
@@ -322,6 +363,7 @@
             font-size: 12px;
             color: var(--text-secondary);
             border: 1px solid var(--border);
+            line-height: 1.5;
         }
 
         .system-status {
@@ -330,6 +372,7 @@
             justify-content: center;
             gap: 8px;
             margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .status-indicator {
@@ -375,17 +418,84 @@
         .strength-medium { background: var(--warning); width: 66%; }
         .strength-strong { background: var(--success); width: 100%; }
 
-        @media (max-width: 480px) {
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                min-height: 100vh;
+                display: block;
+                overflow-y: auto;
+            }
+
             .register-container {
                 padding: 30px 20px;
+                margin: 10px auto;
+                max-width: 100%;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             }
             
             .register-header h1 {
                 font-size: 24px;
             }
 
-            body {
-                padding: 10px;
+            .register-header p {
+                font-size: 13px;
+            }
+
+            .form-input {
+                padding: 12px 14px;
+            }
+
+            .register-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+
+            .password-requirements {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .system-info {
+                padding: 12px;
+                font-size: 11px;
+            }
+
+            .bg-circle {
+                display: none; /* Hide animated circles on mobile for performance */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 25px 15px;
+            }
+
+            .register-header h1 {
+                font-size: 22px;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .system-badge {
+                font-size: 0.7em;
+                padding: 4px 12px;
+            }
+        }
+
+        @media (max-height: 700px) and (orientation: portrait) {
+            .register-container {
+                margin: 10px auto;
+                padding: 25px 20px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .password-requirements {
+                margin-top: 6px;
+                padding: 6px 10px;
             }
         }
 
@@ -402,6 +512,61 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .validation-summary {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .validation-summary h4 {
+            color: var(--danger);
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .validation-summary ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .validation-summary li {
+            color: var(--text);
+            font-size: 12px;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 30, 30, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Ensure content doesn't get cut off on small screens */
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -437,7 +602,13 @@
             {% endwith %}
         </div>
 
-        <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+        <!-- Validation Summary -->
+        <div class="validation-summary" id="validationSummary">
+            <h4><i class="fas fa-exclamation-triangle"></i> Please fix the following errors:</h4>
+            <ul id="validationErrors"></ul>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}" id="registerForm" novalidate>
             <div class="form-group">
                 <label for="username">
                     <i class="fas fa-user"></i> Username
@@ -449,7 +620,10 @@
                        required 
                        placeholder="Choose a username (min. 3 characters)"
                        autocomplete="username"
-                       minlength="3">
+                       minlength="3"
+                       maxlength="30"
+                       pattern="^[a-zA-Z0-9_\-\.]+$">
+                <div class="input-feedback" id="usernameFeedback"></div>
             </div>
 
             <div class="form-group">
@@ -462,7 +636,9 @@
                        class="form-input" 
                        required 
                        placeholder="Enter your email address"
-                       autocomplete="email">
+                       autocomplete="email"
+                       pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                <div class="input-feedback" id="emailFeedback"></div>
             </div>
 
             <div class="form-group">
@@ -476,7 +652,7 @@
                        required 
                        placeholder="Create a secure password"
                        autocomplete="new-password"
-                       minlength="6">
+                       minlength="8">
                 
                 <!-- Password Strength Meter -->
                 <div class="strength-meter">
@@ -487,17 +663,22 @@
                 <div class="password-requirements">
                     <div class="requirement" id="reqLength">
                         <i class="fas fa-circle"></i>
-                        At least 6 characters
+                        At least 8 characters
                     </div>
                     <div class="requirement" id="reqLetter">
                         <i class="fas fa-circle"></i>
-                        Contains letters
+                        Contains uppercase & lowercase letters
                     </div>
                     <div class="requirement" id="reqNumber">
                         <i class="fas fa-circle"></i>
-                        Contains numbers
+                        Contains at least one number
+                    </div>
+                    <div class="requirement" id="reqSpecial">
+                        <i class="fas fa-circle"></i>
+                        Contains at least one special character
                     </div>
                 </div>
+                <div class="input-feedback" id="passwordFeedback"></div>
             </div>
 
             <div class="form-group">
@@ -511,6 +692,7 @@
                        required 
                        placeholder="Confirm your password"
                        autocomplete="new-password">
+                <div class="input-feedback" id="confirmPasswordFeedback"></div>
             </div>
 
             <button type="submit" class="register-btn" id="submitBtn">
@@ -523,7 +705,7 @@
                 <span class="status-indicator"></span>
                 <span>System Operational - Secure Registration Active</span>
             </div>
-            <p>Your data is encrypted and stored securely</p>
+            <p>Your data is encrypted and stored securely. All passwords are hashed using bcrypt.</p>
         </div>
 
         <div class="login-footer">
@@ -541,65 +723,342 @@
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirm_password');
             const username = document.getElementById('username');
+            const email = document.getElementById('email');
             const strengthFill = document.getElementById('strengthFill');
+            const validationSummary = document.getElementById('validationSummary');
+            const validationErrors = document.getElementById('validationErrors');
             
-            // Password strength checker
+            // Ensure page is scrolled to top on load
+            window.scrollTo(0, 0);
+            
+            // Email validation regex
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            
+            // Password validation regex patterns
+            const passwordRegex = {
+                length: /.{8,}/,
+                lowercase: /[a-z]/,
+                uppercase: /[A-Z]/,
+                number: /[0-9]/,
+                special: /[^a-zA-Z0-9]/
+            };
+
+            // Validation state
+            const validationState = {
+                username: { valid: false, message: '' },
+                email: { valid: false, message: '' },
+                password: { valid: false, message: '' },
+                confirmPassword: { valid: false, message: '' }
+            };
+
+            // Show/hide validation summary
+            function updateValidationSummary() {
+                const errors = [];
+                
+                if (!validationState.username.valid && validationState.username.message) {
+                    errors.push(validationState.username.message);
+                }
+                if (!validationState.email.valid && validationState.email.message) {
+                    errors.push(validationState.email.message);
+                }
+                if (!validationState.password.valid && validationState.password.message) {
+                    errors.push(validationState.password.message);
+                }
+                if (!validationState.confirmPassword.valid && validationState.confirmPassword.message) {
+                    errors.push(validationState.confirmPassword.message);
+                }
+
+                if (errors.length > 0) {
+                    validationSummary.style.display = 'block';
+                    validationErrors.innerHTML = errors.map(error => `<li>${error}</li>`).join('');
+                    
+                    // Scroll to validation summary if it's visible
+                    if (window.innerWidth < 768) {
+                        setTimeout(() => {
+                            validationSummary.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start' 
+                            });
+                        }, 100);
+                    }
+                } else {
+                    validationSummary.style.display = 'none';
+                }
+            }
+
+            // Update input feedback
+            function updateFeedback(elementId, isValid, message) {
+                const feedback = document.getElementById(elementId);
+                feedback.textContent = message;
+                feedback.className = `input-feedback ${isValid ? 'feedback-valid' : 'feedback-invalid'}`;
+                feedback.style.display = message ? 'flex' : 'none';
+            }
+
+            // Validate username
+            function validateUsername(value) {
+                value = value.trim();
+                
+                if (!value) {
+                    validationState.username = { 
+                        valid: false, 
+                        message: 'Username is required' 
+                    };
+                    updateFeedback('usernameFeedback', false, validationState.username.message);
+                    username.classList.add('invalid');
+                    username.classList.remove('valid');
+                    return false;
+                }
+                
+                if (value.length < 3) {
+                    validationState.username = { 
+                        valid: false, 
+                        message: 'Username must be at least 3 characters long' 
+                    };
+                    updateFeedback('usernameFeedback', false, validationState.username.message);
+                    username.classList.add('invalid');
+                    username.classList.remove('valid');
+                    return false;
+                }
+                
+                if (value.length > 30) {
+                    validationState.username = { 
+                        valid: false, 
+                        message: 'Username cannot exceed 30 characters' 
+                    };
+                    updateFeedback('usernameFeedback', false, validationState.username.message);
+                    username.classList.add('invalid');
+                    username.classList.remove('valid');
+                    return false;
+                }
+                
+                // Check for valid characters
+                const usernameRegex = /^[a-zA-Z0-9_\-\.]+$/;
+                if (!usernameRegex.test(value)) {
+                    validationState.username = { 
+                        valid: false, 
+                        message: 'Username can only contain letters, numbers, dots, hyphens, and underscores' 
+                    };
+                    updateFeedback('usernameFeedback', false, validationState.username.message);
+                    username.classList.add('invalid');
+                    username.classList.remove('valid');
+                    return false;
+                }
+
+                validationState.username = { valid: true, message: '' };
+                updateFeedback('usernameFeedback', true, '✓ Username is available');
+                username.classList.add('valid');
+                username.classList.remove('invalid');
+                return true;
+            }
+
+            // Validate email
+            function validateEmail(value) {
+                value = value.trim().toLowerCase();
+                
+                if (!value) {
+                    validationState.email = { 
+                        valid: false, 
+                        message: 'Email is required' 
+                    };
+                    updateFeedback('emailFeedback', false, validationState.email.message);
+                    email.classList.add('invalid');
+                    email.classList.remove('valid');
+                    return false;
+                }
+                
+                if (!emailRegex.test(value)) {
+                    validationState.email = { 
+                        valid: false, 
+                        message: 'Please enter a valid email address' 
+                    };
+                    updateFeedback('emailFeedback', false, validationState.email.message);
+                    email.classList.add('invalid');
+                    email.classList.remove('valid');
+                    return false;
+                }
+                
+                // Check for common disposable email domains
+                const disposableDomains = [
+                    'tempmail.com', 'mailinator.com', 'guerrillamail.com',
+                    'throwawaymail.com', 'yopmail.com', '10minutemail.com'
+                ];
+                
+                const domain = value.split('@')[1];
+                if (disposableDomains.some(d => domain.includes(d))) {
+                    validationState.email = { 
+                        valid: false, 
+                        message: 'Disposable email addresses are not allowed' 
+                    };
+                    updateFeedback('emailFeedback', false, validationState.email.message);
+                    email.classList.add('invalid');
+                    email.classList.remove('valid');
+                    return false;
+                }
+
+                validationState.email = { valid: true, message: '' };
+                updateFeedback('emailFeedback', true, '✓ Email format is valid');
+                email.classList.add('valid');
+                email.classList.remove('invalid');
+                return true;
+            }
+
+            // Check password strength
             function checkPasswordStrength(pass) {
                 let strength = 0;
+                const requirements = {};
                 
-                // Length check
-                if (pass.length >= 6) strength++;
-                if (pass.length >= 8) strength++;
+                // Check each requirement
+                requirements.length = passwordRegex.length.test(pass);
+                requirements.lowercase = passwordRegex.lowercase.test(pass);
+                requirements.uppercase = passwordRegex.uppercase.test(pass);
+                requirements.number = passwordRegex.number.test(pass);
+                requirements.special = passwordRegex.special.test(pass);
                 
-                // Letter check
-                if (/[a-zA-Z]/.test(pass)) strength++;
+                // Calculate strength
+                Object.values(requirements).forEach(req => {
+                    if (req) strength++;
+                });
                 
-                // Number check
-                if (/[0-9]/.test(pass)) strength++;
-                
-                // Special character check
-                if (/[^a-zA-Z0-9]/.test(pass)) strength++;
-                
-                return strength;
+                return { strength, requirements };
             }
-            
+
             // Update password requirements UI
             function updatePasswordRequirements(pass) {
-                const reqLength = document.getElementById('reqLength');
-                const reqLetter = document.getElementById('reqLetter');
-                const reqNumber = document.getElementById('reqNumber');
+                const { requirements } = checkPasswordStrength(pass);
                 
                 // Length requirement
-                if (pass.length >= 6) {
+                const reqLength = document.getElementById('reqLength');
+                if (requirements.length) {
                     reqLength.classList.add('valid');
-                    reqLength.innerHTML = '<i class="fas fa-check"></i> At least 6 characters';
+                    reqLength.innerHTML = '<i class="fas fa-check"></i> At least 8 characters';
                 } else {
                     reqLength.classList.remove('valid');
-                    reqLength.innerHTML = '<i class="fas fa-circle"></i> At least 6 characters';
+                    reqLength.innerHTML = '<i class="fas fa-circle"></i> At least 8 characters';
                 }
                 
                 // Letter requirement
-                if (/[a-zA-Z]/.test(pass)) {
+                const reqLetter = document.getElementById('reqLetter');
+                if (requirements.lowercase && requirements.uppercase) {
                     reqLetter.classList.add('valid');
-                    reqLetter.innerHTML = '<i class="fas fa-check"></i> Contains letters';
+                    reqLetter.innerHTML = '<i class="fas fa-check"></i> Contains uppercase & lowercase letters';
                 } else {
                     reqLetter.classList.remove('valid');
-                    reqLetter.innerHTML = '<i class="fas fa-circle"></i> Contains letters';
+                    reqLetter.innerHTML = '<i class="fas fa-circle"></i> Contains uppercase & lowercase letters';
                 }
                 
                 // Number requirement
-                if (/[0-9]/.test(pass)) {
+                const reqNumber = document.getElementById('reqNumber');
+                if (requirements.number) {
                     reqNumber.classList.add('valid');
-                    reqNumber.innerHTML = '<i class="fas fa-check"></i> Contains numbers';
+                    reqNumber.innerHTML = '<i class="fas fa-check"></i> Contains at least one number';
                 } else {
                     reqNumber.classList.remove('valid');
-                    reqNumber.innerHTML = '<i class="fas fa-circle"></i> Contains numbers';
+                    reqNumber.innerHTML = '<i class="fas fa-circle"></i> Contains at least one number';
+                }
+                
+                // Special character requirement
+                const reqSpecial = document.getElementById('reqSpecial');
+                if (requirements.special) {
+                    reqSpecial.classList.add('valid');
+                    reqSpecial.innerHTML = '<i class="fas fa-check"></i> Contains at least one special character';
+                } else {
+                    reqSpecial.classList.remove('valid');
+                    reqSpecial.innerHTML = '<i class="fas fa-circle"></i> Contains at least one special character';
                 }
             }
-            
+
+            // Validate password
+            function validatePassword(value) {
+                if (!value) {
+                    validationState.password = { 
+                        valid: false, 
+                        message: 'Password is required' 
+                    };
+                    updateFeedback('passwordFeedback', false, validationState.password.message);
+                    password.classList.add('invalid');
+                    password.classList.remove('valid');
+                    return false;
+                }
+                
+                const { strength, requirements } = checkPasswordStrength(value);
+                
+                // Check all requirements
+                if (!requirements.length) {
+                    validationState.password = { 
+                        valid: false, 
+                        message: 'Password must be at least 8 characters long' 
+                    };
+                } else if (!requirements.lowercase || !requirements.uppercase) {
+                    validationState.password = { 
+                        valid: false, 
+                        message: 'Password must contain both uppercase and lowercase letters' 
+                    };
+                } else if (!requirements.number) {
+                    validationState.password = { 
+                        valid: false, 
+                        message: 'Password must contain at least one number' 
+                    };
+                } else if (!requirements.special) {
+                    validationState.password = { 
+                        valid: false, 
+                        message: 'Password must contain at least one special character' 
+                    };
+                } else if (strength >= 5) {
+                    validationState.password = { valid: true, message: '✓ Password strength: Strong' };
+                } else {
+                    validationState.password = { valid: true, message: '✓ Password strength: Good' };
+                }
+                
+                // Update UI
+                if (validationState.password.valid) {
+                    updateFeedback('passwordFeedback', true, validationState.password.message);
+                    password.classList.add('valid');
+                    password.classList.remove('invalid');
+                } else {
+                    updateFeedback('passwordFeedback', false, validationState.password.message);
+                    password.classList.add('invalid');
+                    password.classList.remove('valid');
+                }
+                
+                return validationState.password.valid;
+            }
+
+            // Validate confirm password
+            function validateConfirmPassword(value) {
+                const pass = password.value;
+                
+                if (!value) {
+                    validationState.confirmPassword = { 
+                        valid: false, 
+                        message: 'Please confirm your password' 
+                    };
+                    updateFeedback('confirmPasswordFeedback', false, validationState.confirmPassword.message);
+                    confirmPassword.classList.add('invalid');
+                    confirmPassword.classList.remove('valid');
+                    return false;
+                }
+                
+                if (value !== pass) {
+                    validationState.confirmPassword = { 
+                        valid: false, 
+                        message: 'Passwords do not match' 
+                    };
+                    updateFeedback('confirmPasswordFeedback', false, validationState.confirmPassword.message);
+                    confirmPassword.classList.add('invalid');
+                    confirmPassword.classList.remove('valid');
+                    return false;
+                }
+                
+                validationState.confirmPassword = { valid: true, message: '' };
+                updateFeedback('confirmPasswordFeedback', true, '✓ Passwords match');
+                confirmPassword.classList.add('valid');
+                confirmPassword.classList.remove('invalid');
+                return true;
+            }
+
             // Update strength meter
             function updateStrengthMeter(pass) {
-                const strength = checkPasswordStrength(pass);
+                const { strength } = checkPasswordStrength(pass);
                 strengthFill.className = 'strength-fill';
                 
                 if (pass.length === 0) {
@@ -612,65 +1071,67 @@
                     strengthFill.classList.add('strength-strong');
                 }
             }
-            
-            // Real-time password validation
-            function validatePassword() {
-                const pass = password.value;
-                const confirm = confirmPassword.value;
+
+            // Real-time validation
+            function validateForm() {
+                const usernameValid = validateUsername(username.value);
+                const emailValid = validateEmail(email.value);
+                const passwordValid = validatePassword(password.value);
+                const confirmPasswordValid = validateConfirmPassword(confirmPassword.value);
                 
-                updatePasswordRequirements(pass);
-                updateStrengthMeter(pass);
+                updatePasswordRequirements(password.value);
+                updateStrengthMeter(password.value);
+                updateValidationSummary();
                 
-                // Confirm password match
-                if (confirm.length > 0) {
-                    if (pass === confirm) {
-                        confirmPassword.classList.add('valid');
-                        confirmPassword.classList.remove('invalid');
-                    } else {
-                        confirmPassword.classList.add('invalid');
-                        confirmPassword.classList.remove('valid');
-                    }
-                } else {
-                    confirmPassword.classList.remove('valid', 'invalid');
-                }
-                
-                // Enable/disable submit button based on form validity
-                const isFormValid = form.checkValidity() && pass === confirm && pass.length >= 6;
+                // Enable/disable submit button
+                const isFormValid = usernameValid && emailValid && passwordValid && confirmPasswordValid;
                 submitBtn.disabled = !isFormValid;
+                
+                return isFormValid;
             }
-            
+
             // Event listeners for real-time validation
-            password.addEventListener('input', validatePassword);
-            confirmPassword.addEventListener('input', validatePassword);
-            username.addEventListener('input', validatePassword);
+            username.addEventListener('input', () => {
+                validateUsername(username.value);
+                validateForm();
+            });
             
+            email.addEventListener('input', () => {
+                validateEmail(email.value);
+                validateForm();
+            });
+            
+            password.addEventListener('input', () => {
+                validatePassword(password.value);
+                validateConfirmPassword(confirmPassword.value);
+                validateForm();
+            });
+            
+            confirmPassword.addEventListener('input', () => {
+                validateConfirmPassword(confirmPassword.value);
+                validateForm();
+            });
+
             // Form submission handling
             form.addEventListener('submit', function(e) {
-                const pass = password.value;
-                const confirm = confirmPassword.value;
-                
-                // Final validation
-                if (pass !== confirm) {
+                if (!validateForm()) {
                     e.preventDefault();
-                    showMessage('Passwords do not match!', 'error');
+                    showMessage('Please fix the validation errors before submitting.', 'error');
+                    
+                    // Scroll to validation summary on mobile
+                    if (window.innerWidth < 768) {
+                        setTimeout(() => {
+                            validationSummary.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start' 
+                            });
+                        }, 100);
+                    }
                     return;
                 }
-                
-                if (pass.length < 6) {
-                    e.preventDefault();
-                    showMessage('Password must be at least 6 characters long!', 'error');
-                    return;
-                }
-                
-                if (username.value.length < 3) {
-                    e.preventDefault();
-                    showMessage('Username must be at least 3 characters long!', 'error');
-                    return;
-                }
-                
-                const originalText = submitBtn.innerHTML;
                 
                 // Show loading state
+                const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<div class="loading-spinner"></div> Creating Secure Account...';
                 submitBtn.disabled = true;
                 
@@ -716,8 +1177,28 @@
                 }, 5000);
             }
 
+            // Handle keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                // If user presses Escape while focused on an input, blur it
+                if (e.key === 'Escape' && document.activeElement.tagName === 'INPUT') {
+                    document.activeElement.blur();
+                }
+                
+                // If user presses Enter on an input that's not the submit button, validate
+                if (e.key === 'Enter' && document.activeElement.tagName === 'INPUT' && 
+                    document.activeElement.type !== 'submit') {
+                    e.preventDefault();
+                    validateForm();
+                }
+            });
+
+            // Focus on first input field on page load
+            setTimeout(() => {
+                username.focus();
+            }, 100);
+
             // Initialize form validation
-            validatePassword();
+            validateForm();
         });
 
         // Function to check if username exists in JSON data
@@ -730,6 +1211,20 @@
                 }
             } catch (error) {
                 console.error('Error checking username:', error);
+            }
+            return false;
+        }
+
+        // Function to check if email exists
+        async function checkEmailExists(email) {
+            try {
+                const response = await fetch('/api/check-email?email=' + encodeURIComponent(email));
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.exists;
+                }
+            } catch (error) {
+                console.error('Error checking email:', error);
             }
             return false;
         }
