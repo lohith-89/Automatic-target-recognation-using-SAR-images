@@ -43,5 +43,15 @@
     "password": "789141682744dc0b00c70b631cf8a460f7da781f7ea531f3f619994afd59ac95",
     "email": "as@gmail.com",
     "registered_at": "2026-01-03T10:32:00.500339"
+  },
+  "Lohith": {
+    "password": "789141682744dc0b00c70b631cf8a460f7da781f7ea531f3f619994afd59ac95",
+    "email": "rlohith33@gmail.com",
+    "registered_at": "2026-01-08T14:42:13.569873"
+  },
+  "Amruth": {
+    "password": "789141682744dc0b00c70b631cf8a460f7da781f7ea531f3f619994afd59ac95",
+    "email": "ashishgowda908@gmail.com",
+    "registered_at": "2026-01-09T08:35:02.310059"
   }
 }

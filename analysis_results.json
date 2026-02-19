@@ -1,221 +1,5 @@
 [
   {
-    "reportId": "SAR_20251130_175955",
-    "timestamp": "2025-11-30T17:59:55.641539",
-    "prediction": {
-      "predicted_class": 3,
-      "predicted_class_name": "BTR60",
-      "confidence": 0.9999412298202515,
-      "all_predictions": [
-        [
-          7.907293309017405e-08,
-          2.392905116721522e-06,
-          1.0471705536474474e-05,
-          0.9999412298202515,
-          4.554744009510614e-05,
-          3.1755712642800304e-11,
-          1.490523121594478e-10,
-          2.6791277529802926e-11,
-          2.099517217857283e-07,
-          7.232511478605375e-08,
-          1.2645965004332016e-11
-        ]
-      ],
-      "top_3_predictions": [
-        {
-          "class_name": "BTR60",
-          "confidence": 0.9999412298202515,
-          "threat_level": "MEDIUM"
-        },
-        {
-          "class_name": "BTR70",
-          "confidence": 4.554744009510614e-05,
-          "threat_level": "MEDIUM"
-        },
-        {
-          "class_name": "BRDM2",
-          "confidence": 1.0471705536474474e-05,
-          "threat_level": "MEDIUM"
-        }
-      ],
-      "timestamp": "2025-11-30T17:59:55.641539"
-    },
-    "threat_assessment": {
-      "threat_level": "MEDIUM",
-      "threat_score": 0.49997061491012573,
-      "confidence": 0.9999412298202515,
-      "predicted_class_name": "BTR60",
-      "class_description": "The BTR-60 is an 8-wheeled armored personnel carrier from the Soviet era.",
-      "base_threat": "MEDIUM",
-      "timestamp": "2025-11-30T17:59:55.641539"
-    },
-    "success": true
-  },
-  {
-    "reportId": "SAR_20251130_180008",
-    "timestamp": "2025-11-30T18:00:08.212043",
-    "prediction": {
-      "predicted_class": 4,
-      "predicted_class_name": "BTR70",
-      "confidence": 0.9998716115951538,
-      "all_predictions": [
-        [
-          3.158682915227473e-08,
-          6.7484465944289695e-06,
-          1.2446046184777515e-06,
-          0.00011875772179337218,
-          0.9998716115951538,
-          4.775103090715049e-10,
-          4.542640485993843e-09,
-          2.973921456317363e-11,
-          1.5639269577150117e-06,
-          1.550885997403384e-07,
-          1.0305549816291837e-11
-        ]
-      ],
-      "top_3_predictions": [
-        {
-          "class_name": "BTR70",
-          "confidence": 0.9998716115951538,
-          "threat_level": "MEDIUM"
-        },
-        {
-          "class_name": "BTR60",
-          "confidence": 0.00011875772179337218,
-          "threat_level": "MEDIUM"
-        },
-        {
-          "class_name": "BMP2",
-          "confidence": 6.7484465944289695e-06,
-          "threat_level": "HIGH"
-        }
-      ],
-      "timestamp": "2025-11-30T18:00:08.211039"
-    },
-    "threat_assessment": {
-      "threat_level": "MEDIUM",
-      "threat_score": 0.4999358057975769,
-      "confidence": 0.9998716115951538,
-      "predicted_class_name": "BTR70",
-      "class_description": "An upgraded Soviet APC with improved armor and weapon system.",
-      "base_threat": "MEDIUM",
-      "timestamp": "2025-11-30T18:00:08.211039"
-    },
-    "success": true
-  },
-  {
-    "reportId": "SAR_20251130_180023",
-    "timestamp": "2025-11-30T18:00:23.671558",
-    "prediction": {
-      "predicted_class": 0,
-      "predicted_class_name": "2S1",
-      "confidence": 0.9998249411582947,
-      "all_predictions": [
-        [
-          0.9998249411582947,
-          9.089273953577504e-05,
-          4.026851001981413e-06,
-          7.940591331134783e-07,
-          1.4523299896040953e-08,
-          1.0080221990449445e-08,
-          6.5658108290567174e-12,
-          5.622368189506233e-05,
-          1.2572123342380337e-09,
-          2.3112917915568687e-05,
-          4.772108055939306e-12
-        ]
-      ],
-      "top_3_predictions": [
-        {
-          "class_name": "2S1",
-          "confidence": 0.9998249411582947,
-          "threat_level": "HIGH"
-        },
-        {
-          "class_name": "BMP2",
-          "confidence": 9.089273953577504e-05,
-          "threat_level": "HIGH"
-        },
-        {
-          "class_name": "T62",
-          "confidence": 5.622368189506233e-05,
-          "threat_level": "CRITICAL"
-        }
-      ],
-      "timestamp": "2025-11-30T18:00:23.671558"
-    },
-    "threat_assessment": {
-      "threat_level": "CRITICAL",
-      "threat_score": 0.9498336941003799,
-      "confidence": 0.9998249411582947,
-      "predicted_class_name": "2S1",
-      "class_description": "The 2S1 Gvozdika is a Soviet self-propelled artillery vehicle with a 122mm howitzer.",
-      "base_threat": "HIGH",
-      "timestamp": "2025-11-30T18:00:23.671558"
-    },
-    "success": true
-  },
-  {
-    "reportId": "SAR_20251130_180303",
-    "timestamp": "2025-11-30T18:03:03.378483",
-    "prediction": {
-      "predicted_class": 9,
-      "predicted_class_name": "ZIL132",
-      "confidence": 0.92,
-      "timestamp": "2025-11-30T18:03:03.378483"
-    },
-    "threat_assessment": {
-      "threat_level": "LOW",
-      "threat_score": 0.18400000000000002,
-      "confidence": 0.92,
-      "predicted_class_name": "ZIL132",
-      "class_description": "The ZIL-132 is a heavy-duty Soviet military truck used for logistics.",
-      "base_threat": "LOW",
-      "timestamp": "2025-11-30T18:03:03.378483"
-    },
-    "success": true
-  },
-  {
-    "reportId": "SAR_20251130_180307",
-    "timestamp": "2025-11-30T18:03:07.931592",
-    "prediction": {
-      "predicted_class": 2,
-      "predicted_class_name": "BRDM2",
-      "confidence": 0.78,
-      "timestamp": "2025-11-30T18:03:07.930587"
-    },
-    "threat_assessment": {
-      "threat_level": "MEDIUM",
-      "threat_score": 0.39,
-      "confidence": 0.78,
-      "predicted_class_name": "BRDM2",
-      "class_description": "BRDM-2 is an amphibious armored scout car designed for reconnaissance.",
-      "base_threat": "MEDIUM",
-      "timestamp": "2025-11-30T18:03:07.930587"
-    },
-    "success": true
-  },
-  {
-    "reportId": "SAR_20251130_180310",
-    "timestamp": "2025-11-30T18:03:10.219571",
-    "prediction": {
-      "predicted_class": 8,
-      "predicted_class_name": "T72",
-      "confidence": 0.95,
-      "timestamp": "2025-11-30T18:03:10.218106"
-    },
-    "threat_assessment": {
-      "threat_level": "CRITICAL",
-      "threat_score": 0.9025,
-      "confidence": 0.95,
-      "predicted_class_name": "T72",
-      "class_description": "The T-72 is a globally used main battle tank with a 125mm gun.",
-      "base_threat": "CRITICAL",
-      "timestamp": "2025-11-30T18:03:10.218106"
-    },
-    "success": true
-  },
-  {
     "reportId": "SAR_20251130_180313",
     "timestamp": "2025-11-30T18:03:13.793691",
     "prediction": {
@@ -7965,5 +7749,605 @@
     },
     "processing_stage": "COMPLETE",
     "username": "loki"
+  },
+  {
+    "reportId": "report_1767434583_100",
+    "timestamp": "2026-01-03T15:33:03.024296",
+    "prediction": {
+      "predicted_class": 7,
+      "predicted_class_name": "T62",
+      "confidence": 0.9999151229858398,
+      "all_predictions": [
+        [
+          8.531256412425137e-08,
+          1.0077593870505552e-08,
+          9.640844567115892e-09,
+          1.750299558067603e-11,
+          2.930807289566739e-12,
+          1.1373110453405388e-08,
+          6.392988805004052e-09,
+          0.9999151229858398,
+          3.8565843851756654e-08,
+          1.8586109318263766e-09,
+          8.476955554215237e-05
+        ]
+      ],
+      "top_3_predictions": [
+        {
+          "class_name": "T62",
+          "confidence": 0.9999151229858398,
+          "threat_level": "CRITICAL"
+        },
+        {
+          "class_name": "ZSU_23_4",
+          "confidence": 8.476955554215237e-05,
+          "threat_level": "HIGH"
+        },
+        {
+          "class_name": "2S1",
+          "confidence": 8.531256412425137e-08,
+          "threat_level": "HIGH"
+        }
+      ],
+      "timestamp": "2026-01-03T15:33:02.986295",
+      "confidence_status": "HIGH_CONFIDENCE",
+      "is_confident": true,
+      "is_rejected": false,
+      "message": "Confidence (99.99%) meets threshold (85%)",
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      }
+    },
+    "threat_assessment": {
+      "threat_level": "CRITICAL",
+      "threat_score": 0.9927258100509643,
+      "confidence": 0.9999151229858398,
+      "predicted_class_name": "T62",
+      "class_description": "The T-62 is a Soviet main battle tank known for its 115mm smoothbore gun.",
+      "base_threat": "CRITICAL",
+      "timestamp": "2026-01-03T15:33:02.986295",
+      "is_unknown": false,
+      "is_rejected": false,
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      },
+      "sar_score": 0.8,
+      "is_likely_sar": true
+    },
+    "sar_validation": {
+      "is_sar": true,
+      "is_rejected": false,
+      "sar_score": 0.8,
+      "passed_checks": "4/4",
+      "checks_passed": 4,
+      "similarity_score": 0.8,
+      "statistics": {},
+      "check_details": {},
+      "rejection_reasons": null,
+      "diagnostics": "SAR image accepted (100% SAR characteristics)",
+      "validation_type": "simple"
+    },
+    "processing_stage": "COMPLETE",
+    "username": "loki"
+  },
+  {
+    "reportId": "report_1767863547_100",
+    "timestamp": "2026-01-08T14:42:27.748672",
+    "prediction": {
+      "predicted_class": 7,
+      "predicted_class_name": "T62",
+      "confidence": 0.9999992847442627,
+      "all_predictions": [
+        [
+          7.690458936338018e-09,
+          3.511354401686262e-11,
+          1.4215223442803904e-10,
+          2.494415976127696e-14,
+          7.862183533336939e-15,
+          6.45506842422705e-11,
+          4.5640435875071717e-11,
+          0.9999992847442627,
+          7.488385467269154e-10,
+          5.800438254710549e-12,
+          7.544999789388385e-07
+        ]
+      ],
+      "top_3_predictions": [
+        {
+          "class_name": "T62",
+          "confidence": 0.9999992847442627,
+          "threat_level": "CRITICAL"
+        },
+        {
+          "class_name": "ZSU_23_4",
+          "confidence": 7.544999789388385e-07,
+          "threat_level": "HIGH"
+        },
+        {
+          "class_name": "2S1",
+          "confidence": 7.690458936338018e-09,
+          "threat_level": "HIGH"
+        }
+      ],
+      "timestamp": "2026-01-08T14:42:27.733676",
+      "confidence_status": "HIGH_CONFIDENCE",
+      "is_confident": true,
+      "is_rejected": false,
+      "message": "Confidence (100.00%) meets threshold (85%)",
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      }
+    },
+    "threat_assessment": {
+      "threat_level": "CRITICAL",
+      "threat_score": 0.9927497961521149,
+      "confidence": 0.9999992847442627,
+      "predicted_class_name": "T62",
+      "class_description": "The T-62 is a Soviet main battle tank known for its 115mm smoothbore gun.",
+      "base_threat": "CRITICAL",
+      "timestamp": "2026-01-08T14:42:27.733676",
+      "is_unknown": false,
+      "is_rejected": false,
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      },
+      "sar_score": 0.8,
+      "is_likely_sar": true
+    },
+    "sar_validation": {
+      "is_sar": true,
+      "is_rejected": false,
+      "sar_score": 0.8,
+      "passed_checks": "4/4",
+      "checks_passed": 4,
+      "similarity_score": 0.8,
+      "statistics": {},
+      "check_details": {},
+      "rejection_reasons": null,
+      "diagnostics": "SAR image accepted (100% SAR characteristics)",
+      "validation_type": "simple"
+    },
+    "processing_stage": "COMPLETE",
+    "username": "Lohith"
+  },
+  {
+    "reportId": "report_1767931518_100",
+    "timestamp": "2026-01-09T09:35:18.596265",
+    "prediction": {
+      "predicted_class": 7,
+      "predicted_class_name": "T62",
+      "confidence": 0.999998927116394,
+      "all_predictions": [
+        [
+          2.3500744461557588e-08,
+          5.882901110698668e-11,
+          2.15516160473328e-10,
+          1.554797550472678e-13,
+          4.1897281949148865e-14,
+          3.8315989270287787e-10,
+          4.979409939931401e-11,
+          0.999998927116394,
+          6.498405147326025e-10,
+          4.2579134662545925e-11,
+          1.1076294867962133e-06
+        ]
+      ],
+      "top_3_predictions": [
+        {
+          "class_name": "T62",
+          "confidence": 0.999998927116394,
+          "threat_level": "CRITICAL"
+        },
+        {
+          "class_name": "ZSU_23_4",
+          "confidence": 1.1076294867962133e-06,
+          "threat_level": "HIGH"
+        },
+        {
+          "class_name": "2S1",
+          "confidence": 2.3500744461557588e-08,
+          "threat_level": "HIGH"
+        }
+      ],
+      "timestamp": "2026-01-09T09:35:18.547246",
+      "confidence_status": "HIGH_CONFIDENCE",
+      "is_confident": true,
+      "is_rejected": false,
+      "message": "Confidence (100.00%) meets threshold (85%)",
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      }
+    },
+    "threat_assessment": {
+      "threat_level": "CRITICAL",
+      "threat_score": 0.9927496942281723,
+      "confidence": 0.999998927116394,
+      "predicted_class_name": "T62",
+      "class_description": "The T-62 is a Soviet main battle tank known for its 115mm smoothbore gun.",
+      "base_threat": "CRITICAL",
+      "timestamp": "2026-01-09T09:35:18.547246",
+      "is_unknown": false,
+      "is_rejected": false,
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      },
+      "sar_score": 0.8,
+      "is_likely_sar": true
+    },
+    "sar_validation": {
+      "is_sar": true,
+      "is_rejected": false,
+      "sar_score": 0.8,
+      "passed_checks": "4/4",
+      "checks_passed": 4,
+      "similarity_score": 0.8,
+      "statistics": {},
+      "check_details": {},
+      "rejection_reasons": null,
+      "diagnostics": "SAR image accepted (100% SAR characteristics)",
+      "validation_type": "simple"
+    },
+    "processing_stage": "COMPLETE",
+    "username": "Amruth"
+  },
+  {
+    "reportId": "report_1767931535_100",
+    "timestamp": "2026-01-09T09:35:35.018890",
+    "prediction": {
+      "predicted_class": 7,
+      "predicted_class_name": "T62",
+      "confidence": 0.999998927116394,
+      "all_predictions": [
+        [
+          2.3500744461557588e-08,
+          5.882901110698668e-11,
+          2.15516160473328e-10,
+          1.554797550472678e-13,
+          4.1897281949148865e-14,
+          3.8315989270287787e-10,
+          4.979409939931401e-11,
+          0.999998927116394,
+          6.498405147326025e-10,
+          4.2579134662545925e-11,
+          1.1076294867962133e-06
+        ]
+      ],
+      "top_3_predictions": [
+        {
+          "class_name": "T62",
+          "confidence": 0.999998927116394,
+          "threat_level": "CRITICAL"
+        },
+        {
+          "class_name": "ZSU_23_4",
+          "confidence": 1.1076294867962133e-06,
+          "threat_level": "HIGH"
+        },
+        {
+          "class_name": "2S1",
+          "confidence": 2.3500744461557588e-08,
+          "threat_level": "HIGH"
+        }
+      ],
+      "timestamp": "2026-01-09T09:35:34.966341",
+      "confidence_status": "HIGH_CONFIDENCE",
+      "is_confident": true,
+      "is_rejected": false,
+      "message": "Confidence (100.00%) meets threshold (85%)",
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      }
+    },
+    "threat_assessment": {
+      "threat_level": "CRITICAL",
+      "threat_score": 0.9927496942281723,
+      "confidence": 0.999998927116394,
+      "predicted_class_name": "T62",
+      "class_description": "The T-62 is a Soviet main battle tank known for its 115mm smoothbore gun.",
+      "base_threat": "CRITICAL",
+      "timestamp": "2026-01-09T09:35:34.966341",
+      "is_unknown": false,
+      "is_rejected": false,
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      },
+      "sar_score": 0.8,
+      "is_likely_sar": true
+    },
+    "sar_validation": {
+      "is_sar": true,
+      "is_rejected": false,
+      "sar_score": 0.8,
+      "passed_checks": "4/4",
+      "checks_passed": 4,
+      "similarity_score": 0.8,
+      "statistics": {},
+      "check_details": {},
+      "rejection_reasons": null,
+      "diagnostics": "SAR image accepted (100% SAR characteristics)",
+      "validation_type": "simple"
+    },
+    "processing_stage": "COMPLETE",
+    "username": "Amruth"
+  },
+  {
+    "reportId": "report_1767934412_100",
+    "timestamp": "2026-01-09T10:23:32.902337",
+    "prediction": {
+      "predicted_class": 7,
+      "predicted_class_name": "T62",
+      "confidence": 0.9999992847442627,
+      "all_predictions": [
+        [
+          7.690458936338018e-09,
+          3.511354401686262e-11,
+          1.4215223442803904e-10,
+          2.494415976127696e-14,
+          7.862183533336939e-15,
+          6.45506842422705e-11,
+          4.5640435875071717e-11,
+          0.9999992847442627,
+          7.488385467269154e-10,
+          5.800438254710549e-12,
+          7.544999789388385e-07
+        ]
+      ],
+      "top_3_predictions": [
+        {
+          "class_name": "T62",
+          "confidence": 0.9999992847442627,
+          "threat_level": "CRITICAL"
+        },
+        {
+          "class_name": "ZSU_23_4",
+          "confidence": 7.544999789388385e-07,
+          "threat_level": "HIGH"
+        },
+        {
+          "class_name": "2S1",
+          "confidence": 7.690458936338018e-09,
+          "threat_level": "HIGH"
+        }
+      ],
+      "timestamp": "2026-01-09T10:23:32.782702",
+      "confidence_status": "HIGH_CONFIDENCE",
+      "is_confident": true,
+      "is_rejected": false,
+      "message": "Confidence (100.00%) meets threshold (85%)",
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      }
+    },
+    "threat_assessment": {
+      "threat_level": "CRITICAL",
+      "threat_score": 0.9927497961521149,
+      "confidence": 0.9999992847442627,
+      "predicted_class_name": "T62",
+      "class_description": "The T-62 is a Soviet main battle tank known for its 115mm smoothbore gun.",
+      "base_threat": "CRITICAL",
+      "timestamp": "2026-01-09T10:23:32.784377",
+      "is_unknown": false,
+      "is_rejected": false,
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      },
+      "sar_score": 0.8,
+      "is_likely_sar": true
+    },
+    "sar_validation": {
+      "is_sar": true,
+      "is_rejected": false,
+      "sar_score": 0.8,
+      "passed_checks": "4/4",
+      "checks_passed": 4,
+      "similarity_score": 0.8,
+      "statistics": {},
+      "check_details": {},
+      "rejection_reasons": null,
+      "diagnostics": "SAR image accepted (100% SAR characteristics)",
+      "validation_type": "simple"
+    },
+    "processing_stage": "COMPLETE",
+    "username": "Amruth"
+  },
+  {
+    "reportId": "report_1767934509_100",
+    "timestamp": "2026-01-09T10:25:09.918404",
+    "prediction": {
+      "predicted_class": 5,
+      "predicted_class_name": "D7",
+      "confidence": 1.0,
+      "all_predictions": [
+        [
+          4.164692918548924e-17,
+          2.5067768020423608e-17,
+          2.5044782870839444e-13,
+          1.4073235366437466e-16,
+          5.632771167192629e-19,
+          1.0,
+          3.460757471317533e-19,
+          2.892199067044965e-12,
+          1.522373087704569e-20,
+          7.017596281855276e-09,
+          2.8432614040951876e-09
+        ]
+      ],
+      "top_3_predictions": [
+        {
+          "class_name": "D7",
+          "confidence": 1.0,
+          "threat_level": "LOW"
+        },
+        {
+          "class_name": "ZIL132",
+          "confidence": 7.017596281855276e-09,
+          "threat_level": "LOW"
+        },
+        {
+          "class_name": "ZSU_23_4",
+          "confidence": 2.8432614040951876e-09,
+          "threat_level": "HIGH"
+        }
+      ],
+      "timestamp": "2026-01-09T10:25:09.914401",
+      "confidence_status": "HIGH_CONFIDENCE",
+      "is_confident": true,
+      "is_rejected": false,
+      "message": "Confidence (100.00%) meets threshold (85%)",
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      }
+    },
+    "threat_assessment": {
+      "threat_level": "LOW",
+      "threat_score": 0.209,
+      "confidence": 1.0,
+      "predicted_class_name": "D7",
+      "class_description": "The D7 is a bulldozer used for military engineering and earthmoving operations.",
+      "base_threat": "LOW",
+      "timestamp": "2026-01-09T10:25:09.914401",
+      "is_unknown": false,
+      "is_rejected": false,
+      "sar_validation": {
+        "is_sar": true,
+        "is_rejected": false,
+        "sar_score": 0.8,
+        "passed_checks": "4/4",
+        "checks_passed": 4,
+        "similarity_score": 0.8,
+        "statistics": {},
+        "check_details": {},
+        "rejection_reasons": null,
+        "diagnostics": "SAR image accepted (100% SAR characteristics)",
+        "validation_type": "simple"
+      },
+      "sar_score": 0.8,
+      "is_likely_sar": true
+    },
+    "sar_validation": {
+      "is_sar": true,
+      "is_rejected": false,
+      "sar_score": 0.8,
+      "passed_checks": "4/4",
+      "checks_passed": 4,
+      "similarity_score": 0.8,
+      "statistics": {},
+      "check_details": {},
+      "rejection_reasons": null,
+      "diagnostics": "SAR image accepted (100% SAR characteristics)",
+      "validation_type": "simple"
+    },
+    "processing_stage": "COMPLETE",
+    "username": "Amruth"
   }
 ]
