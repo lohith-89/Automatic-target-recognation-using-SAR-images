@@ -1,158 +1,153 @@
-🚀 SAR Automatic Target Recognition (ATR) System
-📌 Project Overview
+# 🚀 SAR Automatic Target Recognition (ATR) System
 
-This project implements a Deep Learning–based Automatic Target Recognition (ATR) system for classifying military vehicles from Synthetic Aperture Radar (SAR) images.
+## 📌 Project Overview
 
-The system performs:
+This project implements a **Deep Learning–based Automatic Target Recognition (ATR) system** for classifying military vehicles from **Synthetic Aperture Radar (SAR) images**.
 
-SAR image preprocessing
+Synthetic Aperture Radar (SAR) works in all weather and lighting conditions, making it highly useful in defense and surveillance applications.  
+This system automates the detection and classification process using deep learning techniques to improve accuracy, reliability, and speed.
 
-Edge enhancement using Sobel filters
+The system integrates edge enhancement, multi-scale convolution, confidence-based prediction handling, and automated threat assessment within a real-time web application.
 
-Multi-scale CNN classification
+---
 
-Confidence-based prediction handling
+## 🎯 Objectives
 
-Threat assessment generation
+- Develop a deep learning–based ATR system for accurate SAR image classification  
+- Reduce dependency on large labeled datasets using effective feature learning  
+- Apply confidence-based prediction handling to reduce false classifications  
+- Perform automated threat level assessment based on detected targets  
+- Deploy a real-time web-based system for practical usage  
 
-Web-based deployment using Flask
+---
 
-The system achieves high accuracy and provides real-time prediction via a web interface.
+## 🧠 Technologies Used
 
-🧠 Technologies Used
+- Python  
+- TensorFlow / Keras  
+- Flask  
+- NumPy  
+- Scikit-learn  
+- Matplotlib  
+- Bootstrap  
+- SQLite  
 
-Python
+---
 
-TensorFlow / Keras
+## 🏗 System Workflow
 
-Flask
+1. User uploads SAR image  
+2. SAR image validation is performed  
+3. Image preprocessing (Resize + Normalize)  
+4. Sobel edge feature extraction  
+5. Multi-scale CNN classification  
+6. Confidence score calculation  
+7. Threat level assignment (Low / Medium / High / Critical)  
+8. Alert generation and result storage  
 
-NumPy
+---
 
-Scikit-learn
+## 🧩 Model Architecture
 
-Matplotlib
+- Input Size: 224 × 224 × 3  
+- Edge Enhancement: Sobel Filter  
+- Multi-scale Convolutions: 3×3, 5×5, 7×7  
+- Activation Function: ReLU  
+- Output Layer: Softmax  
+- Optimizer: Adam  
+- Loss Function: Categorical Crossentropy  
 
-Bootstrap (Frontend)
+---
 
-SQLite (Database)
+## 📊 Performance Evaluation
 
-📂 Project Structure
+The model performance is evaluated using:
+
+- Training and validation accuracy curves  
+- ROC Curve (AUC Score)  
+- Confusion Matrix  
+- Precision, Recall, F1-score  
+
+The system achieves approximately **99% classification accuracy** on the test dataset.
+
+---
+
+## 🚨 Threat Assessment
+
+Based on the recognized vehicle type, the system assigns threat levels:
+
+- Low  
+- Medium  
+- High  
+- Critical  
+
+Low-confidence predictions are marked as **Unknown** to minimize false alarms and improve system reliability.
+
+---
+
+## 🌐 Web Application Features
+
+- Secure SAR image upload  
+- Real-time prediction  
+- Confidence score display  
+- Threat level classification  
+- Alert generation  
+- Result storage and reporting  
+- Database integration  
+
+---
+
+## 📂 Project Structure
+
 SAR/
 │
-├── app1.py                        # Main Flask application
-├── downstream_model_weights.h5    # Trained ATR model weights
-├── self_supervised_model_weights.weights.h5
-├── model.h5
-├── model2.h5
-│
-├── templates/                     # HTML pages
-├── static/                        # CSS, JS, images
-│
-├── data/                          # Training dataset
-├── Unlabeled/                     # Unlabeled SAR images
-├── alerts/                        # Alert logs
-├── reports/                       # Generated reports
-├── flagged/                       # Flagged images
-│
-├── sar_system.db                  # Database file
-├── alarms.json
-├── analysis_results.json
-├── users.json
-│
-├── requirements.txt
-├── runtime.txt
-├── render.yaml
-├── Procfile
-└── README.md
-🏗 System Workflow
+├── app1.py  
+├── downstream_model_weights.h5  
+├── model.h5  
+├── model2.h5  
+├── self_supervised_model_weights.weights.h5  
+│  
+├── templates/  
+├── static/  
+│  
+├── data/  
+├── Unlabeled/  
+├── alerts/  
+├── reports/  
+├── flagged/  
+│  
+├── sar_system.db  
+├── alarms.json  
+├── analysis_results.json  
+├── users.json  
+│  
+├── requirements.txt  
+├── runtime.txt  
+├── render.yaml  
+├── Procfile  
+└── README.md  
 
-1️⃣ User uploads SAR image
-2️⃣ Image is validated
-3️⃣ Preprocessing (Resize + Normalize)
-4️⃣ Sobel Edge Extraction
-5️⃣ Multi-Scale CNN Classification
-6️⃣ Confidence Score Calculation
-7️⃣ Threat Level Assignment
-8️⃣ Alert & Result Storage
+---
 
-🧩 Model Details
+## ⚙️ Installation & Setup
 
-Input size: 224 × 224 × 3
+### 1️⃣ Clone Repository
 
-Sobel edge-based feature enhancement
-
-Multi-scale convolutions (3×3, 5×5, 7×7)
-
-Optimizer: Adam
-
-Loss: Categorical Crossentropy
-
-Output: Softmax probabilities
-
-📊 Evaluation Metrics
-
-The system is evaluated using:
-
-Accuracy curves
-
-ROC curves (AUC)
-
-Confusion matrix
-
-Precision, Recall, F1-score
-
-Model achieves ~99% accuracy on test dataset.
-
-🚨 Threat Assessment
-
-Detected targets are categorized into:
-
-Low
-
-Medium
-
-High
-
-Critical
-
-Low-confidence predictions are marked as:
-
-Unknown
-🌐 Running the Project Locally
-1️⃣ Clone Repository
-git clone https://github.com/your-username/sar-atr.git
+```bash
+git clone https://github.com/lohith-89/Automatic-target-recognation-using-SAR-images.git
 cd SAR
-2️⃣ Install Requirements
-pip install -r requirements.txt
-3️⃣ Run Flask App
-python app1.py
 
-Open in browser:
 
-http://127.0.0.1:5000/
-☁️ Deployment
+## 👨‍💻 Authors
 
-This project supports deployment on:
+### 🔹 Lohith R  
+B.E. Computer Science and Engineering (Data Science)  
+SJB Institute of Technology  
+Visvesvaraya Technological University (VTU)  
+Academic Year: 2025–26  
 
-Render (render.yaml included)
-
-Any WSGI-supported server
-
-🔐 Features
-
-✔ Confidence Thresholding
-✔ SAR Image Validation
-✔ Alert Generation
-✔ Report Storage
-✔ Database Integration
-✔ Web Interface
-
-👨‍💻 Authors
-
-Amruth K S
-Lohith R
-B.E. CSE (Data Science)
-SJB Institute of Technology
-VTU
-
+### 🔹 Amruth K S  
+B.E. Computer Science and Engineering (Data Science)  
+SJB Institute of Technology  
+Visvesvaraya Technological University (VTU)  
+Academic Year: 2025–26  
