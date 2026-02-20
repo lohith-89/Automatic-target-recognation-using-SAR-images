@@ -152,13 +152,7 @@ Any WSGI-supported server
 
 Amruth K S
 Lohith R
-<<<<<<< HEAD
+B.E. CSE (Data Science)
+SJB Institute of Technology
+VTU
 
-B.E. CSE (Data Science)
-SJB Institute of Technology
-VTU
-=======
-B.E. CSE (Data Science)
-SJB Institute of Technology
-VTU
->>>>>>> 298ff81529a7ed793c566a192e9ff447b923ed52
