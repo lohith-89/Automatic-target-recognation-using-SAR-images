@@ -169,25 +169,7 @@ Low-confidence predictions are marked as **Unknown** to minimize false alarms.
 
 ---
 
-## ☁️ Deployment
 
-The project includes:
-
-- render.yaml  
-- Procfile  
-- runtime.txt  
-
-Example deployment configuration:
-
-Build command:
-```
-pip install -r requirements.txt
-```
-
-Start command:
-```
-gunicorn app1:app
-```
 
 ---
 
